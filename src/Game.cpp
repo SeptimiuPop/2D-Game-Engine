@@ -20,11 +20,11 @@
 
         config.close();
 
-        window->create(bounds,title, sf::Style::Fullscreen);
 
         if (fullscreen){
             width = 1920;
             height = 1080;
+            window->create(sf::VideoMode(width, height),title, sf::Style::Fullscreen);
         }
         else{
             width = 640;
@@ -42,7 +42,7 @@
         
         Entity e(250,250);
         entities.push_back(e);
-        entities[0].initSprite("../assets/sprite.png");
+        entities[0].initSprite("../assets/sprite.png",4,32,32);
 
         bg_t.loadFromFile("../assets/bg.jpeg"); 
         
@@ -70,10 +70,10 @@
                 window->close();
 
             if(key.isKeyPressed(key.Escape)) window->close();
-            if(key.isKeyPressed(key.W)) entities[0].move(0,-1);
-            if(key.isKeyPressed(key.A)) entities[0].move(-1,0);
-            if(key.isKeyPressed(key.S)) entities[0].move(0, 1);
-            if(key.isKeyPressed(key.D)) entities[0].move(1, 0);
+            if(key.isKeyPressed(key.W)) {move = true; dir[0]=1;}
+            if(key.isKeyPressed(key.A)) {move = true; dir[1]=1;}
+            if(key.isKeyPressed(key.S)) {move = true; dir[2]=1;}
+            if(key.isKeyPressed(key.D)) {move = true; dir[3]=1;}
             if(key.isKeyPressed(key.Space)) slowed = true;
             if(mouse.isButtonPressed(mouse.Right)) draw=true;
             
@@ -83,10 +83,10 @@
                     fullscreen = !fullscreen;
                     initWindow();
                 }
-                if(sfEvent.key.code == key.W) move = false;
-                if(sfEvent.key.code == key.A) move = false;
-                if(sfEvent.key.code == key.S) move = false;
-                if(sfEvent.key.code == key.D) move = false;
+                if(sfEvent.key.code == key.W) {move = false; dir[0] = 0;}
+                if(sfEvent.key.code == key.A) {move = false; dir[1] = 0;}
+                if(sfEvent.key.code == key.S) {move = false; dir[2] = 0;}
+                if(sfEvent.key.code == key.D) {move = false; dir[3] = 0;}
                 if(sfEvent.key.code == key.Space) slowed = false;
             }
             if (sfEvent.type == sf::Event::MouseButtonReleased)
@@ -98,16 +98,29 @@
     void Game::UpdateMovement(){
 
 
-        // sf::Vector2i localPosition = mouse.getPosition(*window);
-        // float mouse_dx = localPosition.x;
-        // float mouse_dy = localPosition.y;
+        sf::Vector2i localPosition = mouse.getPosition(*window);
+        float mouse_x = localPosition.x;
+        float mouse_y = localPosition.y;
         
-        //when spacebar pressed, reduce the speed
-                
+        
 
-        //vars used in relative position
+        bool ok = false;
+        for(int d: dir)
+            if(d == 1)
+                ok = true;
+        move = ok;
 
-        // entities[0].update_on_mouse(target_x,target_y);
+
+        if(move){
+            if(dir[0] == 1) entities[0].move(0,-1, slowed, dt);
+            if(dir[1] == 1) entities[0].move(-1,0, slowed, dt);
+            if(dir[2] == 1) entities[0].move(0, 1, slowed, dt);
+            if(dir[3] == 1) entities[0].move(1, 0, slowed, dt);
+        }
+
+        entities[0].updateAnimation(dt, move);
+
+        entities[0].update_on_mouse(mouse_x,mouse_y);
 
     }
 
@@ -118,11 +131,15 @@
 
     void Game::render(){
             
+            dt = dtClock.getElapsedTime().asSeconds();
+            dtClock.restart(); 
+
             window->clear();
 
             window->draw(bg_s);
 
             entities[0].draw(window,width,height);
+
 
             window->display();
     }

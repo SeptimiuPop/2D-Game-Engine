@@ -4,31 +4,28 @@
     Entity::Entity(float x_poz, float y_poz)
         :x(x_poz), y(y_poz){}
 
-    void Entity::initSprite(std::string file){
+    void Entity::initSprite(std::string file, float scale, int offset_x, int offset_y){
+        
+        size_x = offset_x;
+        size_y = offset_y;
+
         t.loadFromFile(file);
         s.setTexture(t);
-        s.setScale(sf::Vector2f(4.f, 4.f));
+        s.setScale(sf::Vector2f(scale, scale));
     }
 
-    float Entity::get_x_pozition(){
-        return x;
-    }
+    void Entity::move(float dx, float dy, bool slowed, float dt){
+        
+        if(slowed)  speed = 100;
+        else        speed = 300;
 
-    float Entity::get_y_pozition(){
-        return y;
-    }
-
-    void Entity::move(float dx, float dy){
-        // if(speed <= 20) speed += acc;
         if(dx<0) {facing = 0; dir[0] = 1;}
         if(dy<0) {facing = 1; dir[1] = 1;}
         if(dx>0) {facing = 2; dir[2] = 1;}
         if(dy>0) {facing = 3; dir[3] = 1;}
 
-        // if(slowed) speed = 5; else speed = 1;
-
-        x+= dx*speed;
-        y+= dy*speed;
+        x+= dx*speed*dt;
+        y+= dy*speed*dt;
         s.setPosition(x,y);
 
         //sets the direction the sprite is facing
@@ -36,11 +33,18 @@
         if(facing == 3) iny = 32;
         if(facing == 0) iny = 64;
         if(facing == 2) iny = 96;
+    }
 
+    void Entity::updateAnimation(float dt, bool moves){
+        
+        if(!moves) inx = 0;
+        
+        else{
         //on certain frames animate the sprite
-        de = (de+1)%16;
-        if(de==0) inx += 32;
+        de += dt;
+        if(de >= 0.05) {de = 0; inx += 32;}
         if(inx>352) inx=0;
+        }
     }
 
     void Entity::update_on_mouse(float target_x, float target_y){
@@ -65,18 +69,18 @@
         if(facing == 2) iny = 96;
     }
 
-    void Entity::resetSpeed(){speed=3;}
-
     void Entity::draw(sf::RenderWindow* window, int width, int height){
-        // if(x<0||x>width) x = int(width+x)%width;
-        // if(y<0||y>height) y = int(height+y)%height;
-
     
         //if the sprite is out of bounds wrap arround
-        // dx = (dx+width)%width;
-        // dy = (dy+height)%height;
+        // x = int(x+width)%width;
+        // y = int(y+height)%height;
 
-        s.setTextureRect(sf::IntRect(inx, iny, tx, ty));
+        if (x + 64 < 0 ) x = width + 64; 
+        if (x - 64 > width ) x = 0 - 64; 
+        if (y + 64 < 0) y = height + 64; 
+        if (y - 64 > height) y = 0 - 64; 
+
+        s.setTextureRect(sf::IntRect(inx, iny, size_x, size_y));
         window->draw(s);
     }
 

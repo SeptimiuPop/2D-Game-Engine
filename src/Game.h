@@ -27,6 +27,8 @@ class Game{
         bool draw   = false;
         bool clear  = true;
         
+        int dir[4] = {0,0,0,0};
+
         //initialization
         void initWindow();
 
