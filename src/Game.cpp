@@ -4,53 +4,67 @@
     //initialization
     void Game::initWindow(){
 
+        
         std::ifstream config("../config/init_window.txt");
         std::string title = "None";
-        sf::VideoMode bounds(640, 480);
+        sf::VideoMode bounds(1920, 1080);
         int framerate = 120;
 
         if(config.is_open()){
             std::getline(config, title);
             
             config >> bounds.width >> bounds.height;
-            // if(fullscreen)
             config >> bounds.width >> bounds.height;
             config >> framerate;
         }
 
         config.close();
 
+        width = 640;
+        height = 480;
+        window = new sf::RenderWindow(sf::VideoMode(640,480), title, sf::Style::Default);  
+        // window->setKeyRepeatEnabled(false);
+    }
 
+    void Game::changeVideoMode(){
+        fullscreen = !fullscreen;
         if (fullscreen){
             width = 1920;
             height = 1080;
-            window->create(sf::VideoMode(width, height),title, sf::Style::Fullscreen);
+            window->create(sf::VideoMode(width, height),"C++ Game", sf::Style::Fullscreen);
         }
         else{
             width = 640;
             height = 480;
-            window->create(sf::VideoMode(width, height),title, sf::Style::Default);
+            window->create(sf::VideoMode(width, height),"C++ Game", sf::Style::Default);
         }
-
-        // window->setKeyRepeatEnabled(false);
     }
 
 
     //constructor/destructor
     Game::Game(){
-        window = new sf::RenderWindow(sf::VideoMode(640, 480),"C++ Game", sf::Style::Default);  
         
-        Entity e(250,250);
-        entities.push_back(e);
-        entities[0].initSprite("../assets/sprite.png",4,32,32);
+        initWindow();
 
-        bg_t.loadFromFile("../assets/bg.jpeg"); 
+        Entity player(250,250);
+        entities.push_back(player);
+        
+        Entity e(500,500);
+        entities.push_back(e);
+
+        Entity e2(800,800);
+        entities.push_back(e2);
+        
+        for (auto& en:entities)
+            en.initSprite("../assets/sprite.png",4,32,32);
+        
+
+        bg_t.loadFromFile("../assets/bg.png"); 
         
         bg_s.setTexture(bg_t);
         bg_s.setPosition(0,0);
 
         
-        initWindow();
     }
 
     Game::~Game(){
@@ -79,10 +93,7 @@
             
             if(sfEvent.type == sf::Event::KeyReleased){
                 if (sfEvent.key.code == key.Enter 
-                && key.isKeyPressed(key.LAlt)){
-                    fullscreen = !fullscreen;
-                    initWindow();
-                }
+                && key.isKeyPressed(key.LAlt)) changeVideoMode();
                 if(sfEvent.key.code == key.W) {move = false; dir[0] = 0;}
                 if(sfEvent.key.code == key.A) {move = false; dir[1] = 0;}
                 if(sfEvent.key.code == key.S) {move = false; dir[2] = 0;}
@@ -101,8 +112,6 @@
         sf::Vector2i localPosition = mouse.getPosition(*window);
         float mouse_x = localPosition.x;
         float mouse_y = localPosition.y;
-        
-        
 
         bool ok = false;
         for(int d: dir)
@@ -110,17 +119,19 @@
                 ok = true;
         move = ok;
 
-
         if(move){
             if(dir[0] == 1) entities[0].move(0,-1, slowed, dt);
             if(dir[1] == 1) entities[0].move(-1,0, slowed, dt);
-            if(dir[2] == 1) entities[0].move(0, 1, slowed, dt);
             if(dir[3] == 1) entities[0].move(1, 0, slowed, dt);
+            if(dir[2] == 1) entities[0].move(0, 1, slowed, dt);
         }
-
         entities[0].updateAnimation(dt, move);
 
-        entities[0].update_on_mouse(mouse_x,mouse_y);
+        // for (auto& en : entities){
+        //     en.updateAnimation(dt, move);
+        //     en.update_on_mouse(mouse_x,mouse_y);
+        // }
+
 
     }
 
@@ -138,7 +149,9 @@
 
             window->draw(bg_s);
 
-            entities[0].draw(window,width,height);
+            entities[0].draw(window, width, height);
+            // for(auto& en : entities) 
+            //     en.draw(window,width,height);
 
 
             window->display();

@@ -21,7 +21,7 @@ class Game{
         int height;
         
 
-        bool fullscreen = true;
+        bool fullscreen = false;
         bool slowed = false;
         bool move = false;
         bool draw   = false;
@@ -31,6 +31,7 @@ class Game{
 
         //initialization
         void initWindow();
+        void changeVideoMode();
 
     public:
 
