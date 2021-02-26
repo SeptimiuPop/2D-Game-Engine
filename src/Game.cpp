@@ -20,9 +20,9 @@
 
         config.close();
 
-        width = 640;
-        height = 480;
-        window = new sf::RenderWindow(sf::VideoMode(640,480), title, sf::Style::Default);  
+        width = 1920;
+        height = 1080;
+        window = new sf::RenderWindow(sf::VideoMode(1920,1080), title, sf::Style::Fullscreen);  
         // window->setKeyRepeatEnabled(false);
     }
 
@@ -46,18 +46,16 @@
         
         initWindow();
 
-        Entity player(250,250);
+        Entity player(1344,729);
         entities.push_back(player);
         
-        Entity e(500,500);
+        Entity e(0,0);
         entities.push_back(e);
-
-        Entity e2(800,800);
-        entities.push_back(e2);
         
-        for (auto& en:entities)
-            en.initSprite("../assets/sprite.png",4,32,32);
-        
+        // for (auto& en:entities)
+        //     en.initSprite("../assets/sprite.png",4,32,32);
+        entities[0].initSprite("../assets/Ground_Monk.png", 4, 100, 64);
+        entities[1].initSprite("../assets/sprite.png",4,32,32);
 
         bg_t.loadFromFile("../assets/bg.png"); 
         
@@ -90,7 +88,7 @@
             if(key.isKeyPressed(key.D)) {move = true; dir[3]=1;}
             if(key.isKeyPressed(key.Space)) slowed = true;
             if(mouse.isButtonPressed(mouse.Right)) draw=true;
-            
+
             if(sfEvent.type == sf::Event::KeyReleased){
                 if (sfEvent.key.code == key.Enter 
                 && key.isKeyPressed(key.LAlt)) changeVideoMode();
@@ -98,6 +96,11 @@
                 if(sfEvent.key.code == key.A) {move = false; dir[1] = 0;}
                 if(sfEvent.key.code == key.S) {move = false; dir[2] = 0;}
                 if(sfEvent.key.code == key.D) {move = false; dir[3] = 0;}
+            
+                if(sfEvent.key.code == key.E) entities[0].next_anim();
+                if(sfEvent.key.code == key.Q) entities[0].prev_anim();
+                if(sfEvent.key.code == key.R) entities[0].reset_anim();
+
                 if(sfEvent.key.code == key.Space) slowed = false;
             }
             if (sfEvent.type == sf::Event::MouseButtonReleased)
@@ -120,17 +123,21 @@
         move = ok;
 
         if(move){
-            if(dir[0] == 1) entities[0].move(0,-1, slowed, dt);
-            if(dir[1] == 1) entities[0].move(-1,0, slowed, dt);
-            if(dir[3] == 1) entities[0].move(1, 0, slowed, dt);
-            if(dir[2] == 1) entities[0].move(0, 1, slowed, dt);
+            if(dir[0] == 1) entities[1].move(0,-1, slowed, dt);
+            if(dir[1] == 1) entities[1].move(-1,0, slowed, dt);
+            if(dir[3] == 1) entities[1].move(1, 0, slowed, dt);
+            if(dir[2] == 1) entities[1].move(0, 1, slowed, dt);
         }
-        entities[0].updateAnimation(dt, move);
+        entities[1].updateAnimation(dt, move);
 
         // for (auto& en : entities){
         //     en.updateAnimation(dt, move);
         //     en.update_on_mouse(mouse_x,mouse_y);
         // }
+
+        if(draw){
+            entities[0].animate(dt);
+        }
 
 
     }
@@ -149,9 +156,9 @@
 
             window->draw(bg_s);
 
-            entities[0].draw(window, width, height);
-            // for(auto& en : entities) 
-            //     en.draw(window,width,height);
+            // entities[0].draw(window, width, height);
+            for(auto& en : entities) 
+                en.draw(window,width,height);
 
 
             window->display();

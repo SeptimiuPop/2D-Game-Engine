@@ -21,7 +21,7 @@ class Game{
         int height;
         
 
-        bool fullscreen = false;
+        bool fullscreen = true;
         bool slowed = false;
         bool move = false;
         bool draw   = false;
