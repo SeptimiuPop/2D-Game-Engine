@@ -10,4 +10,4 @@ pass="ToTheVoid01"
 
 git add -A
 git commit -m "$msg"
-echo "$pass" | git push
+git push | echo "$pass"
