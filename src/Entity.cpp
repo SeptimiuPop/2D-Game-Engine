@@ -5,10 +5,6 @@
         :x(x_poz), y(y_poz){}
 
     void Entity::initSprite(std::string file, float scale, int offset_x, int offset_y){
-        
-        size_x = offset_x;
-        size_y = offset_y;
-
         rect.height = offset_y;
         rect.width = offset_x;
         rect.left = 0;
@@ -23,7 +19,7 @@
         index =0;
     }
 
-    void Entity::move(float dx, float dy, bool slowed, float dt){
+    void Entity::move(float dx, float dy, bool slowed,const float & dt){
         
         if(slowed)  speed = 50;
         else if(speed < 500)speed += acc;
@@ -39,22 +35,22 @@
 
     }
 
-    void Entity::updateAnimation(float dt, bool moves){
+    void Entity::updateAnimation(const float & dt, bool moves){
         
         if(!moves) rect.left = 0;
         
         else{
         //on certain frames animate the sprite
         de += speed*dt;
-        if(de >= 25) {de = 0; rect.left += size_x;}
+        if(de >= 25) {de = 0; rect.left += rect.width;}
         if(rect.left>352) rect.left=0;
         }
 
         //sets the direction the sprite is facing
         if(facing == 1) rect.top = 0;
-        if(facing == 3) rect.top = size_y;
-        if(facing == 0) rect.top = 2*size_y;
-        if(facing == 2) rect.top = 3*size_y;
+        if(facing == 3) rect.top = rect.height;
+        if(facing == 0) rect.top = 2*rect.height;
+        if(facing == 2) rect.top = 3*rect.height;
     }
 
     void Entity::update_on_mouse(float target_x, float target_y){
@@ -93,26 +89,26 @@
         reset_anim();
         index ++;
         if(index == 13) index = 0;
-        rect.top = size_y*index;
+        rect.top = rect.height*index;
     }
     void Entity::prev_anim(){
         reset_anim();
         index --;
         if(index == -1) index = 12;
-        rect.top = size_y*index;
+        rect.top = rect.height*index;
     }
     void Entity::reset_anim(){
         frame=0;
         rect.left = 0;
     }
-    void Entity::animate(float dt){
+    void Entity::animate(const float & dt){
         de += dt;
         if(de > 0.1){
             de = 0;
             if(fr[index]<=frame+1) reset_anim();
             else {
                 frame ++;
-                rect.left = size_x*frame;
+                rect.left = rect.width*frame;
             }
         }
     }

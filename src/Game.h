@@ -11,8 +11,8 @@ class Game{
         sf::Mouse mouse;
         std::vector<Entity> entities;
 
-        sf::Texture bg_t;
-        sf::Sprite bg_s;
+        std::map<std::string, int> supportedKeys;
+        std::map<std::string, int> keyBinds;
 
         sf::Clock dtClock;
         float dt;
@@ -31,6 +31,7 @@ class Game{
 
         //initialization
         void initWindow();
+        void initKeys();
         void changeVideoMode();
 
     public:

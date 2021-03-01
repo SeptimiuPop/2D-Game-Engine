@@ -3,8 +3,7 @@
 
     //initialization
     void Game::initWindow(){
-
-        
+        /*
         std::ifstream config("../config/init_window.txt");
         std::string title = "None";
         sf::VideoMode bounds(1920, 1080);
@@ -19,11 +18,40 @@
         }
 
         config.close();
+        */
 
         width = 1920;
         height = 1080;
-        window = new sf::RenderWindow(sf::VideoMode(1920,1080), title, sf::Style::Fullscreen);  
+        window = new sf::RenderWindow(sf::VideoMode(1920,1080), "Tale-of-a-Mouse", sf::Style::Fullscreen);  
         // window->setKeyRepeatEnabled(false);
+    }
+
+    void Game::initKeys(){
+
+        // Open config file for the supported keys
+        std::ifstream config("../config/supported_keys.ini");
+        if(config.is_open()){
+            std::string key;
+            int value;
+
+            // Assign key-value pair for the supported keys
+            while(config >> key >> value)
+                supportedKeys[key] = value;
+        }
+        config.close();
+        
+        // Open config file for keybinds
+        config.open("../config/key_binds.ini");
+        if(config.is_open()){
+            std::string key;
+            std::string value;
+
+            // Assign an action to some supported key
+            while(config >> key >> value)
+                keyBinds[key] = supportedKeys.at(value);
+        }
+        config.close();
+
     }
 
     void Game::changeVideoMode(){
@@ -31,12 +59,12 @@
         if (fullscreen){
             width = 1920;
             height = 1080;
-            window->create(sf::VideoMode(width, height),"C++ Game", sf::Style::Fullscreen);
+            window->create(sf::VideoMode(width, height),"Tale-of-a-Mouse", sf::Style::Fullscreen);
         }
         else{
             width = 640;
             height = 480;
-            window->create(sf::VideoMode(width, height),"C++ Game", sf::Style::Default);
+            window->create(sf::VideoMode(width, height),"Tale-of-a-Mouse", sf::Style::Default);
         }
     }
 
@@ -45,23 +73,20 @@
     Game::Game(){
         
         initWindow();
+        initKeys();
 
-        Entity player(1344,729);
+        Entity bg(0,0);
+        entities.push_back(bg);
+        
+        Entity animated(100,0);
+        entities.push_back(animated);
+        
+        Entity player(0,0);
         entities.push_back(player);
         
-        Entity e(0,0);
-        entities.push_back(e);
-        
-        // for (auto& en:entities)
-        //     en.initSprite("../assets/sprite.png",4,32,32);
-        entities[0].initSprite("../assets/Ground_Monk.png", 4, 100, 64);
-        entities[1].initSprite("../assets/sprite.png",4,32,32);
-
-        bg_t.loadFromFile("../assets/bg.png"); 
-        
-        bg_s.setTexture(bg_t);
-        bg_s.setPosition(0,0);
-
+        entities[0].initSprite("../assets/bg.jpeg", 1, 1920, 1080);
+        entities[1].initSprite("../assets/Ground_Monk.png", 4, 100, 64);
+        entities[2].initSprite("../assets/sprite.png",4,32,32);
         
     }
 
@@ -82,7 +107,7 @@
                 window->close();
 
             if(key.isKeyPressed(key.Escape)) window->close();
-            if(key.isKeyPressed(key.W)) {move = true; dir[0]=1;}
+            if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("MOVE_UP")))) {move = true; dir[0]=1;}
             if(key.isKeyPressed(key.A)) {move = true; dir[1]=1;}
             if(key.isKeyPressed(key.S)) {move = true; dir[2]=1;}
             if(key.isKeyPressed(key.D)) {move = true; dir[3]=1;}
@@ -92,14 +117,14 @@
             if(sfEvent.type == sf::Event::KeyReleased){
                 if (sfEvent.key.code == key.Enter 
                 && key.isKeyPressed(key.LAlt)) changeVideoMode();
-                if(sfEvent.key.code == key.W) {move = false; dir[0] = 0;}
+                if(sfEvent.key.code == keyBinds.at("MOVE_UP")) {move = false; dir[0] = 0;}
                 if(sfEvent.key.code == key.A) {move = false; dir[1] = 0;}
                 if(sfEvent.key.code == key.S) {move = false; dir[2] = 0;}
                 if(sfEvent.key.code == key.D) {move = false; dir[3] = 0;}
             
-                if(sfEvent.key.code == key.E) entities[0].next_anim();
-                if(sfEvent.key.code == key.Q) entities[0].prev_anim();
-                if(sfEvent.key.code == key.R) entities[0].reset_anim();
+                if(sfEvent.key.code == key.E) entities[1].next_anim();
+                if(sfEvent.key.code == key.Q) entities[1].prev_anim();
+                if(sfEvent.key.code == key.R) entities[1].reset_anim();
 
                 if(sfEvent.key.code == key.Space) slowed = false;
             }
@@ -123,20 +148,17 @@
         move = ok;
 
         if(move){
-            if(dir[0] == 1) entities[1].move(0,-1, slowed, dt);
-            if(dir[1] == 1) entities[1].move(-1,0, slowed, dt);
-            if(dir[3] == 1) entities[1].move(1, 0, slowed, dt);
-            if(dir[2] == 1) entities[1].move(0, 1, slowed, dt);
+            if(dir[0] == 1) entities[2].move(0,-1, slowed, dt);
+            if(dir[1] == 1) entities[2].move(-1,0, slowed, dt);
+            if(dir[3] == 1) entities[2].move(1, 0, slowed, dt);
+            if(dir[2] == 1) entities[2].move(0, 1, slowed, dt);
         }
-        entities[1].updateAnimation(dt, move);
+        entities[2].update_on_mouse(mouse_x, mouse_y);
+        entities[2].updateAnimation(dt, move);
 
-        // for (auto& en : entities){
-        //     en.updateAnimation(dt, move);
-        //     en.update_on_mouse(mouse_x,mouse_y);
-        // }
 
         if(draw){
-            entities[0].animate(dt);
+            entities[1].animate(dt);
         }
 
 
@@ -154,9 +176,6 @@
 
             window->clear();
 
-            window->draw(bg_s);
-
-            // entities[0].draw(window, width, height);
             for(auto& en : entities) 
                 en.draw(window,width,height);
 
