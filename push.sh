@@ -4,10 +4,10 @@
 
 echo
 echo "Add commit message: "
+echo
 
 read msg
-pass="ToTheVoid01"
 
 git add -A
 git commit -m "$msg"
-git pull
+git push 
