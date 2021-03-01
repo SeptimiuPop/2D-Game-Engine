@@ -2,6 +2,7 @@
 
 ./clear.sh
 
+echo
 echo "Add commit message: "
 
 read msg
