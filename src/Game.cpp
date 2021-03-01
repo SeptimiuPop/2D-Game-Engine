@@ -51,7 +51,6 @@
                 keyBinds[key] = supportedKeys.at(value);
         }
         config.close();
-
     }
 
     void Game::changeVideoMode(){
@@ -106,8 +105,8 @@
             if (sfEvent.type == sf::Event::Closed)
                 window->close();
 
-            if(key.isKeyPressed(key.Escape)) window->close();
-            if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("MOVE_UP")))) {move = true; dir[0]=1;}
+            if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("CLOSE")))) window->close();
+            if(key.isKeyPressed(key.W)) {move = true; dir[0]=1;}
             if(key.isKeyPressed(key.A)) {move = true; dir[1]=1;}
             if(key.isKeyPressed(key.S)) {move = true; dir[2]=1;}
             if(key.isKeyPressed(key.D)) {move = true; dir[3]=1;}
@@ -117,7 +116,7 @@
             if(sfEvent.type == sf::Event::KeyReleased){
                 if (sfEvent.key.code == key.Enter 
                 && key.isKeyPressed(key.LAlt)) changeVideoMode();
-                if(sfEvent.key.code == keyBinds.at("MOVE_UP")) {move = false; dir[0] = 0;}
+                if(sfEvent.key.code == key.W) {move = false; dir[0] = 0;}
                 if(sfEvent.key.code == key.A) {move = false; dir[1] = 0;}
                 if(sfEvent.key.code == key.S) {move = false; dir[2] = 0;}
                 if(sfEvent.key.code == key.D) {move = false; dir[3] = 0;}
