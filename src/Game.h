@@ -10,6 +10,7 @@ class Game{
         sf::Keyboard key;
         sf::Mouse mouse;
         std::vector<Entity> entities;
+        sf::View view; 
 
         std::map<std::string, int> supportedKeys;
         std::map<std::string, int> keyBinds;
@@ -43,6 +44,7 @@ class Game{
         //function
         void UpdateSFMLEvents();
         void UpdateMovement();
+        void UpdateView();
         void update();
         void render();
         void run();

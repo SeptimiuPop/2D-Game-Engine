@@ -22,7 +22,7 @@
 
         width = 1920;
         height = 1080;
-        window = new sf::RenderWindow(sf::VideoMode(1920,1080), "Tale-of-a-Mouse", sf::Style::Fullscreen);  
+        window = new sf::RenderWindow(sf::VideoMode(width,height), "Tale-of-a-Mouse", sf::Style::Fullscreen);  
         // window->setKeyRepeatEnabled(false);
     }
 
@@ -61,8 +61,8 @@
             window->create(sf::VideoMode(width, height),"Tale-of-a-Mouse", sf::Style::Fullscreen);
         }
         else{
-            width = 640;
-            height = 480;
+            width = 960;
+            height = 540;
             window->create(sf::VideoMode(width, height),"Tale-of-a-Mouse", sf::Style::Default);
         }
     }
@@ -74,6 +74,8 @@
         initWindow();
         initKeys();
 
+        view.setSize(sf::Vector2f(960,540));
+
         Entity bg(0,0);
         entities.push_back(bg);
         
@@ -83,8 +85,11 @@
         Entity player(0,0);
         entities.push_back(player);
         
+        Entity animated2(100,0);
+        entities.push_back(animated2);
+        
         entities[0].initSprite("../assets/bg.jpeg", 1, 1920, 1080);
-        entities[1].initSprite("../assets/Ground_Monk.png", 4, 100, 64);
+        entities[1].initSprite("../assets/Ground_Monk.png", 3.5, 100, 64);
         entities[2].initSprite("../assets/sprite.png",4,32,32);
         
     }
@@ -97,7 +102,6 @@
     //function
     void Game::UpdateSFMLEvents(){
         
-        // std::cout<<handle_mouse(sfEvent, mouse);
         // std::cout<<handle_keys(sfEvent, key);
 
         while (window->pollEvent(sfEvent)){
@@ -137,8 +141,7 @@
 
 
         sf::Vector2i localPosition = mouse.getPosition(*window);
-        float mouse_x = localPosition.x;
-        float mouse_y = localPosition.y;
+        sf::Vector2i screen_center(width/2, height/2);
 
         bool ok = false;
         for(int d: dir)
@@ -152,9 +155,9 @@
             if(dir[3] == 1) entities[2].move(1, 0, slowed, dt);
             if(dir[2] == 1) entities[2].move(0, 1, slowed, dt);
         }
-        entities[2].update_on_mouse(mouse_x, mouse_y);
+        
+        entities[2].update_on_mouse(screen_center, localPosition);
         entities[2].updateAnimation(dt, move);
-
 
         if(draw){
             entities[1].animate(dt);
@@ -163,23 +166,51 @@
 
     }
 
+    void Game::UpdateView(){
+        sf::Vector2f player = entities[2].getPozition();
+        sf::Vector2f view_bounds = view.getSize();
+        // the view should fit the game world (never going outside of it)
+        // the view should then 
+        view_bounds.x /=2;
+        view_bounds.y /=2;
+
+        // check if the view is within the game bounds
+        if(player.x<view_bounds.x) player.x = view_bounds.x;
+        if(player.x>width-view_bounds.x) player.x = width-view_bounds.x;
+        if(player.y<view_bounds.y) player.y = view_bounds.y;
+        if(player.y>height-view_bounds.y) player.y = height-view_bounds.y;
+        view.setCenter(player);
+    }
+
     void Game::update(){
         UpdateSFMLEvents();
         UpdateMovement();
+        UpdateView();
+
+        dt = dtClock.getElapsedTime().asSeconds();
+        dtClock.restart(); 
     }
 
-    void Game::render(){
-            
-            dt = dtClock.getElapsedTime().asSeconds();
-            dtClock.restart(); 
+    void Game::render(){            
 
-            window->clear();
+        sf::RectangleShape rect;
+        rect.setFillColor(sf::Color::Red);
+        rect.setSize(sf::Vector2f(150.f,25.f));
+        rect.setPosition(20,20);
 
-            for(auto& en : entities) 
-                en.draw(window,width,height);
+        // draw game elements in view
+        window->setView(view);
 
+        window->clear();
 
-            window->display();
+        for(auto& en : entities) 
+            en.draw(window,width,height);
+
+        // draw UI elements
+        window->setView(window->getDefaultView());
+        window->draw(rect);
+
+        window->display();
     }
 
     void Game::run(){

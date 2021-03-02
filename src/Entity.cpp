@@ -9,6 +9,8 @@
         rect.width = offset_x;
         rect.left = 0;
         rect.top = 0;
+        
+        this->scale = scale;
 
         t.loadFromFile(file);
         s.setTexture(t);
@@ -17,6 +19,13 @@
 
         frame =0;
         index =0;
+    }
+
+    sf::Vector2f Entity::getPozition(){
+        sf::Vector2f poz;
+        poz.x = x+(scale*rect.width)/2;
+        poz.y = y+(scale*rect.height)/2;
+        return poz;
     }
 
     void Entity::move(float dx, float dy, bool slowed,const float & dt){
@@ -28,7 +37,7 @@
         if(dy<0) facing = 1;
         if(dx>0) facing = 2;
         if(dy>0) facing = 3;
-
+        
         x+= dx*speed*dt;
         y+= dy*speed*dt;
         s.setPosition(x,y);
@@ -53,21 +62,34 @@
         if(facing == 2) rect.top = 3*rect.height;
     }
 
-    void Entity::update_on_mouse(float target_x, float target_y){
+    void Entity::update_on_mouse(sf::Vector2i view, sf::Vector2i mouse){
+        
+        //detects relative pozition to the mouse
+        if(abs(mouse.x-view.x) <= abs(mouse.y-view.y)){
+            if((mouse.y-view.y)>=0) facing = 3; //mouse up
+            else                        facing = 1; //mouse down
+        }
+        else{
+            if((mouse.x-view.x)>=0) facing = 2; //mouse r
+            else                        facing = 0; //mouse l
+        }
+    }
+
+    void Entity::update_on_target(float target_x, float target_y){
         
         //original sprite position is top left corner
         //adjust pozition to the center
         int sprite_dx = x+64, sprite_dy = y+64;
 
 
-        //detects relative pozition to the mouse
+        //detects relative pozition to the target
         if(abs(target_x-sprite_dx) <= abs(target_y-sprite_dy)){
-            if((target_y-sprite_dy)>=0) facing = 3; //mouse up
-            else                        facing = 1; //mouse down
+            if((target_y-sprite_dy)>=0) facing = 3; //target up
+            else                        facing = 1; //target down
         }
         else{
-            if((target_x-sprite_dx)>=0) facing = 2; //mouse r
-            else                        facing = 0; //mouse l
+            if((target_x-sprite_dx)>=0) facing = 2; //target r
+            else                        facing = 0; //target l
         }
 
     }
@@ -75,10 +97,10 @@
     void Entity::draw(sf::RenderWindow* window, int width, int height){
     
         //if the sprite is out of bounds wrap arround
-        if (x + 128 < 0) x = width; 
-        if (x > width )  x = -128; 
-        if (y + 128 < 0) y = height; 
-        if (y > height)  y = -128; 
+        // if (x + 128 < 0) x = width; 
+        // if (x > width )  x = -128; 
+        // if (y + 128 < 0) y = height; 
+        // if (y > height)  y = -128; 
 
         s.setTextureRect(rect);
         window->draw(s);
