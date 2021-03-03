@@ -31,7 +31,7 @@
     void Entity::move(float dx, float dy, bool slowed,const float & dt){
         
         if(slowed)  speed = 50;
-        else if(speed < 500)speed += acc;
+        else if(speed < 300)speed += acc;
 
         if(dx<0) facing = 0;
         if(dy<0) facing = 1;
@@ -81,7 +81,6 @@
         //adjust pozition to the center
         int sprite_dx = x+64, sprite_dy = y+64;
 
-
         //detects relative pozition to the target
         if(abs(target_x-sprite_dx) <= abs(target_y-sprite_dy)){
             if((target_y-sprite_dy)>=0) facing = 3; //target up
@@ -97,10 +96,11 @@
     void Entity::draw(sf::RenderWindow* window, int width, int height){
     
         //if the sprite is out of bounds wrap arround
-        // if (x + 128 < 0) x = width; 
-        // if (x > width )  x = -128; 
-        // if (y + 128 < 0) y = height; 
-        // if (y > height)  y = -128; 
+        if (x + 128 < 0) x = width; 
+        if (x > width )  x = -128; 
+        if (y + 128 < 0) y = height; 
+        if (y > height)  y = -128; 
+
 
         s.setTextureRect(rect);
         window->draw(s);

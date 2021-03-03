@@ -74,7 +74,7 @@
         initWindow();
         initKeys();
 
-        view.setSize(sf::Vector2f(960,540));
+        view.setSize(sf::Vector2f(1440,810));
 
         Entity bg(0,0);
         entities.push_back(bg);
@@ -82,7 +82,7 @@
         Entity animated(100,0);
         entities.push_back(animated);
         
-        Entity player(0,0);
+        Entity player(960,540);
         entities.push_back(player);
         
         Entity animated2(100,0);
@@ -168,18 +168,19 @@
 
     void Game::UpdateView(){
         sf::Vector2f player = entities[2].getPozition();
+        sf::Vector2i cursor = mouse.getPosition(*window);
         sf::Vector2f view_bounds = view.getSize();
-        // the view should fit the game world (never going outside of it)
-        // the view should then 
-        view_bounds.x /=2;
-        view_bounds.y /=2;
 
-        // check if the view is within the game bounds
-        if(player.x<view_bounds.x) player.x = view_bounds.x;
-        if(player.x>width-view_bounds.x) player.x = width-view_bounds.x;
-        if(player.y<view_bounds.y) player.y = view_bounds.y;
-        if(player.y>height-view_bounds.y) player.y = height-view_bounds.y;
-        view.setCenter(player);
+        // center the mouse position
+        cursor.x -= width/2;
+        cursor.y -= height/2;
+        
+        // set the view position to be centered on the player
+        // plus a small offset given by the mouse pozition
+        view_bounds.x = player.x + (cursor.x)/4;
+        view_bounds.y = player.y + (cursor.y)/4;
+
+        view.setCenter(view_bounds);
     }
 
     void Game::update(){
@@ -204,7 +205,7 @@
         window->clear();
 
         for(auto& en : entities) 
-            en.draw(window,width,height);
+            en.draw(window,1920,1080);
 
         // draw UI elements
         window->setView(window->getDefaultView());
