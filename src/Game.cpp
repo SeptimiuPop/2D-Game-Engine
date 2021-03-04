@@ -35,7 +35,7 @@
         Entity animated(100,0);
         entities.push_back(animated);
         
-        Entity player(960,540);
+        Entity player(200,200);
         entities.push_back(player);
         
         Entity tileset(100,500);
@@ -68,7 +68,7 @@
         initWindow();
         initEntities();
 
-        view.setSize(sf::Vector2f(1440,810));        
+        view.setSize(sf::Vector2f(1440,810));     
     }
 
     Game::~Game(){
@@ -78,44 +78,26 @@
 
     //function
     void Game::UpdateSFMLEvents(){
-        
-        handler.handle_input(window);
 
-        while (window->pollEvent(sfEvent)){
-    
-            if (sfEvent.type == sf::Event::Closed)
-                window->close();
+        std::vector<Message> inputs = handler.handle_input(window);
 
-            if(key.isKeyPressed(key.Escape)) window->close();
-            if(key.isKeyPressed(key.W)) {move = true; dir[0]=1;}
-            if(key.isKeyPressed(key.A)) {move = true; dir[1]=1;}
-            if(key.isKeyPressed(key.S)) {move = true; dir[2]=1;}
-            if(key.isKeyPressed(key.D)) {move = true; dir[3]=1;}
-            if(key.isKeyPressed(key.Space)) slowed = true;
-            if(mouse.isButtonPressed(mouse.Right)) draw=true;
+        for(auto& action : inputs){
 
-            if(sfEvent.type == sf::Event::KeyReleased){
-                if (sfEvent.key.code == key.Enter 
-                && key.isKeyPressed(key.LAlt)) changeVideoMode();
-                if(sfEvent.key.code == key.W) {move = false; dir[0] = 0;}
-                if(sfEvent.key.code == key.A) {move = false; dir[1] = 0;}
-                if(sfEvent.key.code == key.S) {move = false; dir[2] = 0;}
-                if(sfEvent.key.code == key.D) {move = false; dir[3] = 0;}
-            
-                if(sfEvent.key.code == key.E) entities[1].next_anim();
-                if(sfEvent.key.code == key.Q) entities[1].prev_anim();
-                if(sfEvent.key.code == key.R) entities[1].reset_anim();
+        if(action.message == "CLOSE") window->close();
+        if(action.message == "FULLSCREEN") changeVideoMode();
+        if(action.message == "SLOW") slowed = action.check;
+        if(action.message == "DRAW") draw = action.check;
+        if(action.message == "NEXT") entities[1].next_anim();
+        if(action.message == "PREV") entities[1].prev_anim();
+        if(action.message == "RESET") entities[1].reset_anim();
 
-                if(sfEvent.key.code == key.Space) slowed = false;
-            }
-            if (sfEvent.type == sf::Event::MouseButtonReleased)
-                if (sfEvent.mouseButton.button == mouse.Right)
-                    draw = false;
+
+
+        if(action.message == "MOVE"){
+            entities[2].move(action.dir.x, action.dir.y, slowed, dt);
+            std::cout<<action.dir.x<<" "<<action.dir.y<<"\n";
         }
-    }
-
-    void Game::UpdateMovement(){
-
+        }
 
         sf::Vector2i localPosition = mouse.getPosition(*window);
         sf::Vector2i screen_center(width/2, height/2);
@@ -127,10 +109,10 @@
         move = ok;
 
         if(move){
-            if(dir[0] == 1) entities[2].move(0,-1, slowed, dt);
-            if(dir[1] == 1) entities[2].move(-1,0, slowed, dt);
-            if(dir[3] == 1) entities[2].move(1, 0, slowed, dt);
-            if(dir[2] == 1) entities[2].move(0, 1, slowed, dt);
+            if(dir[0] == 1) entities[2].move(0,-1, slowed, dt); //UP
+            if(dir[1] == 1) entities[2].move(-1,0, slowed, dt); //LEFT
+            if(dir[3] == 1) entities[2].move(1, 0, slowed, dt); //RIGHT
+            if(dir[2] == 1) entities[2].move(0, 1, slowed, dt); //DOWN
         }
         
         entities[2].update_on_mouse(screen_center, localPosition);
@@ -139,7 +121,6 @@
         if(draw){
             entities[1].animate(dt);
         }
-
 
     }
 
@@ -162,7 +143,6 @@
 
     void Game::update(){
         UpdateSFMLEvents();
-        UpdateMovement();
         UpdateView();
 
         dt = dtClock.getElapsedTime().asSeconds();

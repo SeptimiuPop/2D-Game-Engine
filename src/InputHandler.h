@@ -20,8 +20,8 @@ class InputHandler{
         InputHandler();
         ~InputHandler();
 
-        void handle_input(sf::RenderWindow* window);
+        std::vector<Message> handle_input(sf::RenderWindow* window);
         Message handle_keys();
-        int handle_mouse();
+        Message handle_mouse();
 };
 
