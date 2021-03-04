@@ -21,15 +21,7 @@ class Game{
         float dt;
 
         int width;
-        int height;
-        
-
-        bool slowed = false;
-        bool move   = false;
-        bool draw   = false;
-        bool clear  = true ;
-        
-        int dir[4] = {0,0,0,0};
+        int height; 
 
         //initialization
         void initWindow();
