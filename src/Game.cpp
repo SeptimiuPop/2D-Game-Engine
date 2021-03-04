@@ -81,42 +81,31 @@
 
         std::vector<Message> inputs = handler.handle_input(window);
 
+        bool animate = false;
+
         for(auto& action : inputs){
 
-        if(action.message == "CLOSE") window->close();
-        if(action.message == "FULLSCREEN") changeVideoMode();
-        if(action.message == "SLOW") slowed = action.check;
-        if(action.message == "DRAW") draw = action.check;
-        if(action.message == "NEXT") entities[1].next_anim();
-        if(action.message == "PREV") entities[1].prev_anim();
-        if(action.message == "RESET") entities[1].reset_anim();
+            if(action.message == "CLOSE") window->close();
+            if(action.message == "FULLSCREEN") changeVideoMode();
+            if(action.message == "SLOW") slowed = action.check;
+            if(action.message == "DRAW") draw = action.check;
+            if(action.message == "NEXT") entities[1].next_anim();
+            if(action.message == "PREV") entities[1].prev_anim();
+            if(action.message == "RESET") entities[1].reset_anim();
+            if(action.message == "MOVE"){
+                if(action.dir.x != 0 || action.dir.y != 0){
+                    entities[2].move(action.dir.x, action.dir.y, slowed, dt);
+                    animate = true;
+                }
 
-
-
-        if(action.message == "MOVE"){
-            entities[2].move(action.dir.x, action.dir.y, slowed, dt);
-            std::cout<<action.dir.x<<" "<<action.dir.y<<"\n";
-        }
+            }
         }
 
         sf::Vector2i localPosition = mouse.getPosition(*window);
         sf::Vector2i screen_center(width/2, height/2);
 
-        bool ok = false;
-        for(int d: dir)
-            if(d == 1)
-                ok = true;
-        move = ok;
-
-        if(move){
-            if(dir[0] == 1) entities[2].move(0,-1, slowed, dt); //UP
-            if(dir[1] == 1) entities[2].move(-1,0, slowed, dt); //LEFT
-            if(dir[3] == 1) entities[2].move(1, 0, slowed, dt); //RIGHT
-            if(dir[2] == 1) entities[2].move(0, 1, slowed, dt); //DOWN
-        }
-        
+        entities[2].updateAnimation(dt, animate);
         entities[2].update_on_mouse(screen_center, localPosition);
-        entities[2].updateAnimation(dt, move);
 
         if(draw){
             entities[1].animate(dt);
