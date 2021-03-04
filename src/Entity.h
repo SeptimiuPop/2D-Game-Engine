@@ -20,6 +20,8 @@ class Entity{
         int index;
         int frame;
         int fr[13] = {6,8,3,3,6,9,18,25,16,6,13,7,18};
+        // int fr[17] = {17,17,17,17,17,17,17,17,17,17,17,17,17};
+
     public:
         Animation animation;
 

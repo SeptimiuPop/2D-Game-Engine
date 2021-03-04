@@ -1,5 +1,4 @@
 #include "Game.h"
-#include "input_handler.h"
 
     //initialization
     void Game::initWindow(){
@@ -23,34 +22,29 @@
         width = 1920;
         height = 1080;
         window = new sf::RenderWindow(sf::VideoMode(width,height), "Tale-of-a-Mouse", sf::Style::Fullscreen);  
+        
         // window->setKeyRepeatEnabled(false);
     }
 
-    void Game::initKeys(){
-
-        // Open config file for the supported keys
-        std::ifstream config("../config/supported_keys.ini");
-        if(config.is_open()){
-            std::string key;
-            int value;
-
-            // Assign key-value pair for the supported keys
-            while(config >> key >> value)
-                supportedKeys[key] = value;
-        }
-        config.close();
+    void Game::initEntities(){
         
-        // Open config file for keybinds
-        config.open("../config/key_binds.ini");
-        if(config.is_open()){
-            std::string key;
-            std::string value;
+        Entity bg(0,0);
+        entities.push_back(bg);
+        
+        Entity animated(100,0);
+        entities.push_back(animated);
+        
+        Entity player(960,540);
+        entities.push_back(player);
+        
+        Entity tileset(100,500);
+        entities.push_back(tileset);
+        
+        entities[0].initSprite("../assets/bg.jpeg", 1, 1920, 1080);
+        entities[1].initSprite("../assets/Ground_Monk.png", 3.5, 100, 64);
+        entities[2].initSprite("../assets/sprite.png",4,32,32);
+        // entities[1].initSprite("../assets/Tileset.png",4,16,16);
 
-            // Assign an action to some supported key
-            while(config >> key >> value)
-                keyBinds[key] = supportedKeys.at(value);
-        }
-        config.close();
     }
 
     void Game::changeVideoMode(){
@@ -67,31 +61,13 @@
         }
     }
 
-
     //constructor/destructor
     Game::Game(){
         
         initWindow();
-        initKeys();
+        initEntities();
 
-        view.setSize(sf::Vector2f(1440,810));
-
-        Entity bg(0,0);
-        entities.push_back(bg);
-        
-        Entity animated(100,0);
-        entities.push_back(animated);
-        
-        Entity player(960,540);
-        entities.push_back(player);
-        
-        Entity animated2(100,0);
-        entities.push_back(animated2);
-        
-        entities[0].initSprite("../assets/bg.jpeg", 1, 1920, 1080);
-        entities[1].initSprite("../assets/Ground_Monk.png", 3.5, 100, 64);
-        entities[2].initSprite("../assets/sprite.png",4,32,32);
-        
+        view.setSize(sf::Vector2f(1440,810));        
     }
 
     Game::~Game(){
@@ -102,14 +78,14 @@
     //function
     void Game::UpdateSFMLEvents(){
         
-        // std::cout<<handle_keys(sfEvent, key);
+        handler.handle_input(window);
 
         while (window->pollEvent(sfEvent)){
     
             if (sfEvent.type == sf::Event::Closed)
                 window->close();
 
-            if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("CLOSE")))) window->close();
+            if(key.isKeyPressed(key.Escape)) window->close();
             if(key.isKeyPressed(key.W)) {move = true; dir[0]=1;}
             if(key.isKeyPressed(key.A)) {move = true; dir[1]=1;}
             if(key.isKeyPressed(key.S)) {move = true; dir[2]=1;}
@@ -177,8 +153,8 @@
         
         // set the view position to be centered on the player
         // plus a small offset given by the mouse pozition
-        view_bounds.x = player.x + (cursor.x)/4;
-        view_bounds.y = player.y + (cursor.y)/4;
+        view_bounds.x = player.x + (cursor.x)/8;
+        view_bounds.y = player.y + (cursor.y)/8;
 
         view.setCenter(view_bounds);
     }
