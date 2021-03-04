@@ -1,6 +1,6 @@
 #pragma once
-#include "Entity.cpp"
-#include "InputHandler.cpp"
+#include "Entity.h"
+#include "InputHandler.h"
 
 class Game{
 
@@ -16,9 +16,6 @@ class Game{
         sf::Event sfEvent;
         sf::Keyboard key;
         sf::Mouse mouse;
-
-        std::map<std::string, int> supportedKeys;
-        std::map<std::string, int> keyBinds;
 
         sf::Clock dtClock;
         float dt;

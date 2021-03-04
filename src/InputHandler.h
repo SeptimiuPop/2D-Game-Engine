@@ -1,5 +1,5 @@
 #pragma once
-#include "Message.cpp"
+#include "Message.h"
 
 
 class InputHandler{

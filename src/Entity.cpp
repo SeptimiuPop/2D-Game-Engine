@@ -1,5 +1,7 @@
+#include "Includes.h"
 #include "Entity.h"
 
+    Entity::Entity(){}
 
     Entity::Entity(float x_poz, float y_poz)
         :x(x_poz), y(y_poz){}

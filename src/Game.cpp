@@ -1,3 +1,4 @@
+#include "Includes.h"
 #include "Game.h"
 
     //initialization
@@ -168,7 +169,7 @@
         dtClock.restart(); 
     }
 
-    void Game::render(){            
+    void Game::render(){  
 
         sf::RectangleShape rect;
         rect.setFillColor(sf::Color::Red);

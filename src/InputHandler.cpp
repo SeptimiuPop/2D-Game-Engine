@@ -1,3 +1,4 @@
+#include "Includes.h"
 #include "InputHandler.h"
 
     // private methods
@@ -56,7 +57,6 @@
 
         // Key released events
         if(sfEvent.type == sf::Event::KeyReleased){
-            std::cout<<"key released\n";
             // Resize will always be alt+enter so no keybinding set here
             if (sfEvent.key.code == key.Enter 
                 && key.isKeyPressed(key.LAlt)) mes.setText("FULLSCREEN"); 

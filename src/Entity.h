@@ -1,5 +1,5 @@
 #pragma once
-#include "Animation.cpp"
+#include "Animation.h"
 
 class Entity{
 
@@ -25,6 +25,7 @@ class Entity{
     public:
         Animation animation;
 
+        Entity();
         Entity(float x, float y);
     
         sf::Vector2f getPozition();

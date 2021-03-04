@@ -1,3 +1,4 @@
+#include "Includes.h"
 #include "Message.h"
 
     void Message::setText(std::string text){message = text;}
