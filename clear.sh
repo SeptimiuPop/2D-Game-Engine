@@ -1,11 +1,6 @@
 #!/bin/bash
 
-cd src
 
-rm *.o main.exe
+rm build/*.o build/main.exe
 
 clear
-
-ls 
-
-cd ..

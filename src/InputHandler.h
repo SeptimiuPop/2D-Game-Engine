@@ -9,6 +9,8 @@ class InputHandler{
         std::map<std::string, int> supportedKeys;
         std::map<std::string, int> keyBinds;
 
+        std::vector<Message> input;
+
         sf::Event sfEvent;
         sf::Keyboard key;
         sf::Mouse mouse;
@@ -20,8 +22,8 @@ class InputHandler{
         InputHandler();
         ~InputHandler();
 
-        void handle_input(sf::RenderWindow* window);
-        Message handle_keys();
-        int handle_mouse();
+        std::vector<Message> handle_input(sf::RenderWindow* window);
+        void handle_keys();
+        void handle_mouse();
 };
 

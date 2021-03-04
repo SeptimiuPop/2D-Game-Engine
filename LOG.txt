@@ -5,6 +5,7 @@
 * change movement: add deceleration that runs constantly over acceleration (for smoother movement)
 * change user input to be handled in the Handler class and link the return msg to some action
 * executable file (..?)
+* refactor code 
 
     --ADD
 

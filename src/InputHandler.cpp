@@ -36,49 +36,56 @@
     InputHandler::InputHandler(){initKeys();}
     InputHandler::~InputHandler(){}
 
-    void InputHandler::handle_input(sf::RenderWindow* window){
-        // while(window->pollEvent(sfEvent))
-        Message mes = handle_keys();
+    std::vector<Message> InputHandler::handle_input(sf::RenderWindow* window){
+        
+        input.clear();
+        Message mes;
+
+
+        handle_keys();
+        while(window->pollEvent(sfEvent)){
+            handle_mouse();
+        }
+
+        return input;
     }
 
-    Message InputHandler::handle_keys(){
+    void InputHandler::handle_keys(){
         
         Message mes;
 
         // Key pressed events
-        if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("CLOSE")))) mes.setText("CLOSE");
-        if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("MOVE_UP")))) mes.setText("MOVE");
-        if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("MOVE_LEFT")))) mes.setText("MOVE");
-        if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("MOVE_DOWN")))) mes.setText("MOVE");
-        if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("MOVE_RIGHT")))) mes.setText("MOVE");
-        if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("SLOW")))) mes.setText("SLOW");
+        if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("CLOSE")))) {mes.setCheck("CLOSE", true);input.push_back(mes);}
+        if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("SLOW"))))  {mes.setCheck("SLOW", true); input.push_back(mes);}
         
-
-
-        // Key released events
-        if(sfEvent.type == sf::Event::KeyReleased){
-            // Resize will always be alt+enter so no keybinding set here
-            if (sfEvent.key.code == key.Enter 
-                && key.isKeyPressed(key.LAlt)) mes.setText("FULLSCREEN"); 
-
-            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("MOVE_UP"))) mes.setText("MOVE");
-            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("MOVE_LEFT"))) mes.setText("MOVE");
-            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("MOVE_DOWN"))) mes.setText("MOVE");
-            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("MOVE_RIGHT"))) mes.setText("MOVE");
-            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("SLOW"))) mes.setText("SLOW");
-        }
-        
-        return mes;
+        if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("MOVE_UP"))))    {mes.setDir("MOVE", sf::Vector2i( 0,-1)); input.push_back(mes);}
+        if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("MOVE_LEFT"))))  {mes.setDir("MOVE", sf::Vector2i(-1, 0)); input.push_back(mes);}
+        if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("MOVE_RIGHT")))) {mes.setDir("MOVE", sf::Vector2i( 1, 0)); input.push_back(mes);}
+        if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("MOVE_DOWN"))))  {mes.setDir("MOVE", sf::Vector2i( 0, 1)); input.push_back(mes);}
+        if(mouse.isButtonPressed(mouse.Right)) {mes.setCheck("DRAW", true); input.push_back(mes);}           
     }
 
 
-    int InputHandler::handle_mouse(){
+    void InputHandler::handle_mouse(){
         
-        if(mouse.isButtonPressed(mouse.Right)) return 1;
+        Message mes;
+        
+        // Key released events
+        if(sfEvent.type == sf::Event::KeyReleased){
+            // Resize will always be alt+enter so no keybinding set here
+            if(sfEvent.key.code == key.Enter && key.isKeyPressed(key.LAlt)) {mes.setCheck("FULLSCREEN", true); input.push_back(mes);} 
+            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("SLOW")))  {mes.setCheck("SLOW", false); input.push_back(mes);} 
+            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("NEXT_ANIM")))  {mes.setCheck("NEXT", false); input.push_back(mes);}
+            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("PREV_ANIM")))  {mes.setCheck("PREV", false); input.push_back(mes);}
+            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("RESET_ANIM")))  {mes.setCheck("RESET", false); input.push_back(mes);}
+
+            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("MOVE_UP")))    {mes.setDir("MOVE", sf::Vector2i(0,0)); input.push_back(mes);}
+            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("MOVE_LEFT")))  {mes.setDir("MOVE", sf::Vector2i(0,0)); input.push_back(mes);}
+            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("MOVE_DOWN")))  {mes.setDir("MOVE", sf::Vector2i(0,0)); input.push_back(mes);}
+            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("MOVE_RIGHT"))) {mes.setDir("MOVE", sf::Vector2i(0,0)); input.push_back(mes);}
+        }
 
         if (sfEvent.type == sf::Event::MouseButtonReleased)
             if (sfEvent.mouseButton.button == mouse.Right)
-                return 2;
-        
-        return 0;
+                {mes.setCheck("DRAW", false);input.push_back(mes);}   
     }
