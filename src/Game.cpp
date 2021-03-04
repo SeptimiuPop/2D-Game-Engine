@@ -79,9 +79,12 @@
     //function
     void Game::UpdateSFMLEvents(){
 
+        bool slowed = false;
+        bool draw = false;
+        bool animate = false;
+
         std::vector<Message> inputs = handler.handle_input(window);
 
-        bool animate = false;
 
         for(auto& action : inputs){
 

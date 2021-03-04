@@ -23,7 +23,7 @@ class InputHandler{
         ~InputHandler();
 
         std::vector<Message> handle_input(sf::RenderWindow* window);
-        void handle_keys();
-        void handle_mouse();
+        void handle_push_events();
+        void handle_release_events();
 };
 
