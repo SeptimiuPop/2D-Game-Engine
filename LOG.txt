@@ -4,9 +4,7 @@
 
 * change movement: add deceleration that runs constantly over acceleration (for smoother movement)
 * change user input to be handled in the Handler class and link the return msg to some action
-* change includce statements to the corect way
-    -> figure out how they work on a basic level (ask Agi..?)
-    -> executable file (..?)
+* executable file (..?)
 
     --ADD
 
@@ -22,31 +20,9 @@
 
 4 Mar/2021:
 
-    * new standard include files (like the tutorials) --had to change run.sh and all the includes
+* change includce statements to the corect way
+    - new standard include files (like the tutorials) --had to change run.sh and all the includes
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-As I kept refining my program a bit before moving to the next iteration I was faced with a few decision so I have a couple of questions:
-
-I am using gnu g++ compiler and a regular code editor in which I feel comfortable (no IDE ). The program is run on ubuntu. 
-
-1) Do I need to have an executable file or hould a bash script for running and compiling work as well. If it does should I add an instalation script for the necessary libraries (for SFML and other external files) as well? Idealy I would like to include them directly in the project folder so there wouldn't be a need to add the install script, but I was unsuccessful so far. 
-
-2) Again reguarding the compilation process I have attached a folder with two examples. The first one is a sample of my current setup of my includes and the second one is the one I find the most on the internet. I am starting to realize my setup might not be the best but the lack of a definite answer in my search is causing me some confusion.
-
-* compiling only cpp classes -> do I have to compile header files as well
-* if I use the second example I am unable to create instances of other objects in header file
