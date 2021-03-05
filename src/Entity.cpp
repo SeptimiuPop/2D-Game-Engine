@@ -17,7 +17,7 @@
 
     void Entity::initSound(){
         std::cout<<"\n\nsound sound sound!\n\n";
-        if (!buffer.loadFromFile("../sound/Gungeon/boot_carpet_03.wav"))
+        if (!buffer.loadFromFile("../sound/Gungeon/boot_carpet_01.wav"))
             std::cout<<"\n\nLook ma, no sound!\n\n";
         
         sound.setBuffer(buffer);
