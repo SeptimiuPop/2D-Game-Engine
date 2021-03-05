@@ -1,10 +1,28 @@
 #include "Includes.h"
 #include "Entity.h"
 
+
+    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- CONSTRUCTOR / DESTRUCTOR -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
+
     Entity::Entity(){}
 
     Entity::Entity(float x_poz, float y_poz)
-        :x(x_poz), y(y_poz){}
+        :x(x_poz), y(y_poz){
+        
+        }
+
+
+    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- PRIVATE FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+
+    void Entity::initSound(){
+        std::cout<<"\n\nsound sound sound!\n\n";
+        if (!buffer.loadFromFile("../sound/Gungeon/boot_carpet_03.wav"))
+            std::cout<<"\n\nLook ma, no sound!\n\n";
+        
+        sound.setBuffer(buffer);
+        sound.setVolume(60.f);
+    }
 
     void Entity::initSprite(std::string file, float scale, int offset_x, int offset_y){
         rect.height = offset_y;
@@ -22,6 +40,10 @@
         frame =0;
         index =0;
     }
+
+
+    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- PUBLIC  FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
 
     sf::Vector2f Entity::getPozition(){
         sf::Vector2f poz;
@@ -43,7 +65,6 @@
         x+= dx*speed*dt;
         y+= dy*speed*dt;
         s.setPosition(x,y);
-
     }
 
     void Entity::updateAnimation(const float & dt, bool moves){
@@ -109,6 +130,9 @@
     }
 
 
+    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= ANIMATION FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+    // -> TO BE MOVED IN SEPARATE COMPONENT
+
     void Entity::next_anim(){
         reset_anim();
         index ++;
@@ -135,4 +159,15 @@
                 rect.left = rect.width*frame;
             }
         }
+    }
+
+    void Entity::play_sound(const float & dt, bool play){
+        if(play){
+            if(sound_buffer > 0.5){
+                sound_buffer = 0;
+                sound.play();
+            }
+            sound_buffer += dt;
+        }
+        else sound_buffer = 0;
     }

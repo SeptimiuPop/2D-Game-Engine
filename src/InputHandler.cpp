@@ -1,9 +1,18 @@
 #include "Includes.h"
 #include "InputHandler.h"
 
-    // private methods
+    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- CONSTRUCTOR / DESTRUCTOR -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
+
+
+    InputHandler::InputHandler(){initKeys();}
+    InputHandler::~InputHandler(){}
+
+
+    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- PRIVATE FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
 
     void InputHandler::initKeys(){
+        
         /*Create the game's supported keys list and map them to some key bindings*/
 
         // Open config file for the supported keys
@@ -18,7 +27,9 @@
         }
         config.close();
         
-        // Open config file for keybinds
+
+        /* Open config file to assign the keybinds*/
+
         config.open("../config/key_binds.ini");
         if(config.is_open()){
             std::string key;
@@ -31,18 +42,16 @@
         config.close();
     }
 
-    // public methods
 
-    InputHandler::InputHandler(){initKeys();}
-    InputHandler::~InputHandler(){}
+    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- PUBLIC  FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
 
     std::vector<Message> InputHandler::handle_input(sf::RenderWindow* window){
         
         input.clear();
         Message mes;
 
-
-        handle_push_events();
+        handle_press_events();
         while(window->pollEvent(sfEvent)){
             handle_release_events();
         }
@@ -50,7 +59,7 @@
         return input;
     }
 
-    void InputHandler::handle_push_events(){
+    void InputHandler::handle_press_events(){
         
         Message mes;
 
@@ -64,7 +73,6 @@
         if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("MOVE_DOWN"))))  {mes.setDir("MOVE", sf::Vector2i( 0, 1)); input.push_back(mes);}
         if(mouse.isButtonPressed(mouse.Right)) {mes.setCheck("DRAW", true); input.push_back(mes);}           
     }
-
 
     void InputHandler::handle_release_events(){
         

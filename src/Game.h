@@ -8,23 +8,22 @@ class Game{
         //variables
         sf::RenderWindow *window;
         sf::View view; 
+        int width;
+        int height; 
         bool fullscreen = true;
 
         std::vector<Entity> entities;
-        
         InputHandler handler;
-        sf::Event sfEvent;
-        sf::Keyboard key;
-        sf::Mouse mouse;
 
         sf::Clock dtClock;
         float dt;
 
-        int width;
-        int height; 
+        sf::Music music;
 
-        //initialization
+
+        //initialization functions
         void initWindow();
+        void initBgMusic();
         void initEntities();
         void changeVideoMode();
 
@@ -34,9 +33,8 @@ class Game{
         Game();
         virtual ~Game();
 
-        //function
+        //update functions
         void UpdateSFMLEvents();
-        void UpdateMovement();
         void UpdateView();
         void update();
         void render();

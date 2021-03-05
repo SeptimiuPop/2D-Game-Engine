@@ -1,6 +1,28 @@
 #include "Includes.h"
 #include "Game.h"
 
+    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- CONSTRUCTOR / DESTRUCTOR -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+    Game::Game(){
+        
+        initWindow();
+        initBgMusic();
+        initEntities();
+
+        view.setSize(sf::Vector2f(1440,810));     
+    }
+
+    Game::~Game(){
+        delete window;
+    }
+
+
+
+    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- PRIVATE FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+
+
+
     //initialization
     void Game::initWindow(){
         /*
@@ -27,6 +49,18 @@
         // window->setKeyRepeatEnabled(false);
     }
 
+
+    void Game::initBgMusic(){
+        if (!music.openFromFile("../sound/Timberbrook.wav"))
+            std::cout<<"\n\nSo silent..\n\n";
+
+        music.play();
+        music.setVolume(50.f);
+        music.setLoop(true);
+        music.setPitch(1.f);
+    }
+
+
     void Game::initEntities(){
         
         Entity bg(0,0);
@@ -44,8 +78,8 @@
         entities[0].initSprite("../assets/bg.jpeg", 1, 1920, 1080);
         entities[1].initSprite("../assets/Ground_Monk.png", 3.5, 100, 64);
         entities[2].initSprite("../assets/sprite.png",4,32,32);
+        entities[2].initSound();
         // entities[1].initSprite("../assets/Tileset.png",4,16,16);
-
     }
 
     void Game::changeVideoMode(){
@@ -62,36 +96,27 @@
         }
     }
 
-    //constructor/destructor
-    Game::Game(){
-        
-        initWindow();
-        initEntities();
-
-        view.setSize(sf::Vector2f(1440,810));     
-    }
-
-    Game::~Game(){
-        delete window;
-    }
 
 
-    //function
+    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- PUBLIC  FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+
+
+
     void Game::UpdateSFMLEvents(){
 
-        bool slowed = false;
-        bool draw = false;
-        bool animate = false;
+        /* Calls the input handler to get user input as vector of messages 
+        * and iterates the list to take action */
 
+        bool slowed = false;
+        bool animate = false;
         std::vector<Message> inputs = handler.handle_input(window);
 
-
         for(auto& action : inputs){
-
             if(action.message == "CLOSE") window->close();
             if(action.message == "FULLSCREEN") changeVideoMode();
             if(action.message == "SLOW") slowed = action.check;
-            if(action.message == "DRAW") draw = action.check;
+            if(action.message == "DRAW") entities[1].animate(dt);;
             if(action.message == "NEXT") entities[1].next_anim();
             if(action.message == "PREV") entities[1].prev_anim();
             if(action.message == "RESET") entities[1].reset_anim();
@@ -100,25 +125,21 @@
                     entities[2].move(action.dir.x, action.dir.y, slowed, dt);
                     animate = true;
                 }
-
             }
         }
-
-        sf::Vector2i localPosition = mouse.getPosition(*window);
+        sf::Vector2i localPosition = sf::Mouse::getPosition(*window);
         sf::Vector2i screen_center(width/2, height/2);
 
-        entities[2].updateAnimation(dt, animate);
         entities[2].update_on_mouse(screen_center, localPosition);
-
-        if(draw){
-            entities[1].animate(dt);
-        }
-
+        entities[2].updateAnimation(dt, animate);
+        entities[2].play_sound(dt, animate);
     }
 
+
     void Game::UpdateView(){
+        /**/
+        sf::Vector2i cursor = sf::Mouse::getPosition(*window);
         sf::Vector2f player = entities[2].getPozition();
-        sf::Vector2i cursor = mouse.getPosition(*window);
         sf::Vector2f view_bounds = view.getSize();
 
         // center the mouse position
@@ -133,13 +154,17 @@
         view.setCenter(view_bounds);
     }
 
+
     void Game::update(){
-        UpdateSFMLEvents();
-        UpdateView();
+        if(window->hasFocus()){
+            UpdateSFMLEvents();
+            UpdateView();
+        }
 
         dt = dtClock.getElapsedTime().asSeconds();
         dtClock.restart(); 
     }
+
 
     void Game::render(){  
 

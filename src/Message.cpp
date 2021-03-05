@@ -6,11 +6,6 @@
         check = val;
     }
 
-    void Message::setCheckMouse(std::string text, bool val){
-        mouse = text;
-        check = val;
-    }
-
     void Message::setDir(std::string text, sf::Vector2i direction){
         message = text;
         dir.x = direction.x;

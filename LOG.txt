@@ -15,6 +15,13 @@
     -> 
 * Propper collision detection and handling:
     -> player can fall in pits or be blocked by walls 
+    -> 
+* States
+    -> game_state, menu, inventory, game_over
+    -> and rewrite inputs and game class to handle game menu
+    -> later on... entity state
+    -> 
+* SOUND! (got nothing so far)
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- Change Log -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
