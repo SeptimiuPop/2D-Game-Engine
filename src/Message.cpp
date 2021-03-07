@@ -8,6 +8,7 @@
 
     void Message::setDir(std::string text, sf::Vector2i direction){
         message = text;
-        dir.x = direction.x;
-        dir.y = direction.y;
+        dir.x += direction.x;
+        dir.y += direction.y;
+
     }

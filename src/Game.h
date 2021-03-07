@@ -20,6 +20,7 @@ class Game{
 
         sf::Music music;
 
+        std::string state;
 
         //initialization functions
         void initWindow();
@@ -34,7 +35,7 @@ class Game{
         virtual ~Game();
 
         //update functions
-        void UpdateSFMLEvents();
+        void UpdatePlayerEvents();
         void UpdateView();
         void update();
         void render();

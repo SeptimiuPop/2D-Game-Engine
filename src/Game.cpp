@@ -46,7 +46,7 @@
         height = 1080;
         window = new sf::RenderWindow(sf::VideoMode(width,height), "Tale-of-a-Mouse", sf::Style::Fullscreen);  
         
-        // window->setKeyRepeatEnabled(false);
+        window->setKeyRepeatEnabled(false);
     }
 
 
@@ -55,7 +55,7 @@
             std::cout<<"\n\nSo silent..\n\n";
 
         music.play();
-        music.setVolume(50.f);
+        music.setVolume(60.f);
         music.setLoop(true);
         music.setPitch(1.f);
     }
@@ -66,20 +66,23 @@
         Entity bg(0,0);
         entities.push_back(bg);
         
-        Entity animated(100,0);
+        Entity animated(350,250);
         entities.push_back(animated);
         
-        Entity player(200,200);
+        Entity player(450,450);
         entities.push_back(player);
         
         Entity tileset(100,500);
         entities.push_back(tileset);
-        
-        entities[0].initSprite("../assets/bg.jpeg", 1, 1920, 1080);
+
+        // sprites
+        entities[0].initSprite("../assets/Test_bg.png", 2, 1920, 1088);
         entities[1].initSprite("../assets/Ground_Monk.png", 3.5, 100, 64);
         entities[2].initSprite("../assets/sprite.png",4,32,32);
-        entities[2].initSound();
         // entities[1].initSprite("../assets/Tileset.png",4,16,16);
+        
+        // sound
+        entities[2].initSound("../sound/Gungeon/boot_carpet_01.wav");
     }
 
     void Game::changeVideoMode(){
@@ -103,36 +106,41 @@
 
 
 
-    void Game::UpdateSFMLEvents(){
+    void Game::UpdatePlayerEvents(){
 
         /* Calls the input handler to get user input as vector of messages 
         * and iterates the list to take action */
 
         bool slowed = false;
-        bool animate = false;
+        bool draw = false;
+        bool dash = false;
+        sf::Vector2i move_direction;
+
         std::vector<Message> inputs = handler.handle_input(window);
 
         for(auto& action : inputs){
+            // window actions
             if(action.message == "CLOSE") window->close();
             if(action.message == "FULLSCREEN") changeVideoMode();
-            if(action.message == "SLOW") slowed = action.check;
-            if(action.message == "DRAW") entities[1].animate(dt);;
+            
+            // mock animation actions
+            if(action.message == "DRAW") draw = action.check;
             if(action.message == "NEXT") entities[1].next_anim();
             if(action.message == "PREV") entities[1].prev_anim();
             if(action.message == "RESET") entities[1].reset_anim();
-            if(action.message == "MOVE"){
-                if(action.dir.x != 0 || action.dir.y != 0){
-                    entities[2].move(action.dir.x, action.dir.y, slowed, dt);
-                    animate = true;
-                }
-            }
+            
+            // movement actions
+            if(action.message == "DASH") dash = action.check;
+            if(action.message == "SLOW") slowed = action.check;
+            if(action.message == "MOVE") move_direction = action.dir;
         }
+
         sf::Vector2i localPosition = sf::Mouse::getPosition(*window);
         sf::Vector2i screen_center(width/2, height/2);
+        entities[1].animate(dt, draw);
+        entities[2].update(dt, move_direction, slowed, dash);
+        entities[2].update_on_mouse(screen_center, localPosition);   
 
-        entities[2].update_on_mouse(screen_center, localPosition);
-        entities[2].updateAnimation(dt, animate);
-        entities[2].play_sound(dt, animate);
     }
 
 
@@ -149,20 +157,20 @@
         // set the view position to be centered on the player
         // plus a small offset given by the mouse pozition
         view_bounds.x = player.x + (cursor.x)/8;
-        view_bounds.y = player.y + (cursor.y)/8;
+        view_bounds.y = player.y + (cursor.y)/4;
 
         view.setCenter(view_bounds);
     }
 
 
     void Game::update(){
+        dt = dtClock.getElapsedTime().asSeconds();
+        dtClock.restart();
+        
         if(window->hasFocus()){
-            UpdateSFMLEvents();
+            UpdatePlayerEvents();
             UpdateView();
         }
-
-        dt = dtClock.getElapsedTime().asSeconds();
-        dtClock.restart(); 
     }
 
 
@@ -190,9 +198,8 @@
 
     void Game::run(){
         
-        while(window->isOpen()){
+        while(window->isOpen()){ 
             update();
             render();
-
         }
     }

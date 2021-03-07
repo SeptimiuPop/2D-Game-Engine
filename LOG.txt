@@ -21,7 +21,30 @@
     -> and rewrite inputs and game class to handle game menu
     -> later on... entity state
     -> 
-* SOUND! (got nothing so far)
+* SOUND refined
+
+* Texturing 101: 
+    * wrap borders around the rooms both on top and bottom (2 styles/level is fine)
+        -> a small portion of rooms that don't have wall borders have pit borders instead
+        -> some borders can come as carpet filling
+    * floor textures ( IMPORTANT ! WHAT IS THE THEME OF THE LEVEL?? )
+        1) carpet, stone, wood
+        2) broken - carpet, stone, wood
+        3) cobble, wood, stone + some polish here and there
+    * walls are just the same for texture types 
+        -> wall top borders feel like a horizontal cut-out in wall texture 
+        -> wall = 2x player size
+        -> walls that separate rooms have one texture for border and another for fill black
+
+    * there is some sort of transsitionning between level styles (generally not very drastic in terms of materials)
+
+    * lots of crates, boxes, stuff you can destroy
+
+    * some rooms are always the same in terms of texturing
+
+    * typical room size = 25-30 tiles
+
+
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- Change Log -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
@@ -32,5 +55,9 @@
 * change user input to be handled in the Handler class and link the return msg to some action
 
 
+5 Mar/2021:
 
-
+* Really basic sound: 
+    1) in game music from Game class
+    2) step sound effect
+* Cleaned up code a little bit
