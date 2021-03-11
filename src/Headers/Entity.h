@@ -6,11 +6,9 @@ class Entity{
     private:
         std::string state = "Idle";
 
-        sf::Texture t;
         sf::Sprite s;
         sf::IntRect rect;
 
-        sf::SoundBuffer buffer;
         sf::Sound sound;
         float sound_buffer;
 
@@ -38,18 +36,18 @@ class Entity{
         Entity();
         Entity(float x, float y);
     
-
-        void initSound(std::string file);
-        void initSprite(std::string file, float scale, int offset_x, int offset_y);
+        void initSound(sf::SoundBuffer& buffer, float volume, float pitch);
+        void initSprite(sf::Texture& texture, float scale, int offset_x, int offset_y);
         sf::Vector2f getPozition();
 
         void dash(const float & dt);
 
         void move(const float & dt, sf::Vector2i dir, bool slowed);
+        void setFacing(sf::RenderWindow* window, sf::Vector2i dir);
         void play_anim(const float & dt, bool moves);
         void play_sound(const float & dt, bool play);
         
-        void update(const float &dt, sf::Vector2i dir, bool slowed, bool dash);
+        void update(const float &dt, sf::Vector2i dir, bool slowed, bool dash, sf::RenderWindow* window);
         void draw(sf::RenderWindow* window, int width, int height);
 
         // FOR FACING DIRECTION 

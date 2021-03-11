@@ -23,6 +23,13 @@
     -> 
 * SOUND refined
 
+
+
+
+The tile component will hold different sprites and display them all at once
+Then the map will hold and array of tiles 
+
+
 * Texturing 101: 
     * wrap borders around the rooms both on top and bottom (2 styles/level is fine)
         -> a small portion of rooms that don't have wall borders have pit borders instead
@@ -61,3 +68,10 @@
     1) in game music from Game class
     2) step sound effect
 * Cleaned up code a little bit
+
+6 Mar/2021:
+
+* Dash move in Entity class
+* Game now calls update on entities for movement animation and sound 
+    -> Entity update handles states(primitive)
+* Input Handler gets less commands now (only the ones that matter)

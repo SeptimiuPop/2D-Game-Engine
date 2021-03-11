@@ -1,5 +1,5 @@
-#include "Includes.h"
-#include "Message.h"
+#include "Headers/Includes.h"
+#include "Headers/Message.h"
 
     void Message::setCheck(std::string text, bool val){
         message = text;

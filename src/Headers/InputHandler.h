@@ -22,7 +22,7 @@ class InputHandler{
         InputHandler();
         ~InputHandler();
 
-        std::vector<Message> handle_input(sf::RenderWindow* window);
+        std::vector<Message> &handle_input(sf::RenderWindow* window);
         void handle_press_events();
         void handle_release_events();
 };

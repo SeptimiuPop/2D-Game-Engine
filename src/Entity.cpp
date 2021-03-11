@@ -1,5 +1,5 @@
-#include "Includes.h"
-#include "Entity.h"
+#include "Headers/Includes.h"
+#include "Headers/Entity.h"
 
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- CONSTRUCTOR / DESTRUCTOR -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
@@ -13,15 +13,14 @@
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- PRIVATE FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
 
-    void Entity::initSound(std::string file){
-        if (!buffer.loadFromFile(file))
-            std::cout<<"\n\nLook ma, no sound!\n\n";
+    void Entity::initSound (sf::SoundBuffer& buffer, float volume, float pitch){
         
         sound.setBuffer(buffer);
-        sound.setVolume(60.f);
+        sound.setVolume(volume);
+        sound.setPitch(pitch);
     }
 
-    void Entity::initSprite(std::string file, float scale, int offset_x, int offset_y){
+    void Entity::initSprite(sf::Texture& texture, float scale, int offset_x, int offset_y){
         rect.height = offset_y;
         rect.width = offset_x;
         rect.left = 0;
@@ -29,8 +28,7 @@
         
         this->scale = scale;
 
-        t.loadFromFile(file);
-        s.setTexture(t);
+        s.setTexture(texture);
         s.setScale(sf::Vector2f(scale, scale));
         s.setPosition(x,y);
 
@@ -49,7 +47,7 @@
 
 
     void Entity::dash(const float & dt){
-        if(abs(x-start.x) > 200 || abs(y-start.y) > 200){
+        if(abs(x-start.x) > 150 || abs(y-start.y) > 150){
             speed = 300;
             state = "Idle";
         }
@@ -65,16 +63,12 @@
         if(slowed)  speed = 50;
         else if(speed < 300)speed += acc;
 
-        if(dir.y<0) facing = 0;    // 0 up
-        if(dir.x<0) facing = 2;    // 2 left
-        if(dir.x>0) facing = 3;    // 3 right
-        if(dir.y>0) facing = 1;    // 1 down
-        
         x+= dir.x*speed*dt;
         y+= dir.y*speed*dt;
         s.setPosition(x,y);
 
     }
+
 
     void Entity::play_anim(const float & dt, bool moves){
         
@@ -93,21 +87,13 @@
 
     }
 
-    void Entity::update(const float &dt, sf::Vector2i dir, bool slowed, bool check_dash){  // give a command and decide internaly the state
-
-    /*
+    void Entity::update(const float &dt, sf::Vector2i dir, bool slowed, bool check_dash, sf::RenderWindow* window){
      
-    play_sound and updateAnimation are both depending on wether the character should move 
-    
-    update facing on mouse OR target
-
-    update dash
-
-    */
         if(state == "Dash") dash(dt);
 
         if(state == "Idle"){
             
+            setFacing(window, dir);
             bool moving = false;
 
             if(dir.x != 0 || dir.y != 0) moving = true;
@@ -143,17 +129,32 @@
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- FACING DIRECTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 
+    // Eventually only the player will have this and just store the window pointer inside the class
+    // OR COULD EVEN BE AN COMPONENT
+    void Entity::setFacing(sf::RenderWindow* window, sf::Vector2i dir){
+        if(window != nullptr){
+            sf::Vector2i mouse = sf::Mouse::getPosition(*window);
+            sf::Vector2i view;
+            sf::Vector2u window_size = window->getSize();
+            view.x =window_size.x/2;
+            view.y =window_size.y/2;
 
-    void Entity::update_on_mouse(sf::Vector2i view, sf::Vector2i mouse){
-        
-        //detects relative pozition to the mouse
-        if(abs(mouse.x-view.x) <= abs(mouse.y-view.y)){
-            if((mouse.y-view.y)>=0) facing = 1; //mouse up
-            else                    facing = 0; //mouse down
+            //detects relative pozition to the mouse
+            if(abs(mouse.x-view.x) <= abs(mouse.y-view.y)){
+                if((mouse.y-view.y)>=0) facing = 1; //mouse up
+                else                    facing = 0; //mouse down
+            }
+            else{
+                if((mouse.x-view.x)>=0) facing = 3; //mouse r
+                else                    facing = 2; //mouse l
+            }
+
         }
         else{
-            if((mouse.x-view.x)>=0) facing = 3; //mouse r
-            else                    facing = 2; //mouse l
+            if(dir.y<0) facing = 0;    // 0 up
+            if(dir.x<0) facing = 2;    // 2 left
+            if(dir.x>0) facing = 3;    // 3 right
+            if(dir.y>0) facing = 1;    // 1 down
         }
     }
 

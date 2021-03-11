@@ -1,7 +1,7 @@
 #!/bin/bash
 
-cd build
-clear
+./clear.sh
+cd bin
 
 echo "Building the enviroment..."
 echo

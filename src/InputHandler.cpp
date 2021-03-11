@@ -1,5 +1,5 @@
-#include "Includes.h"
-#include "InputHandler.h"
+#include "Headers/Includes.h"
+#include "Headers/InputHandler.h"
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- CONSTRUCTOR / DESTRUCTOR -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 
@@ -46,7 +46,7 @@
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- PUBLIC  FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
 
-    std::vector<Message> InputHandler::handle_input(sf::RenderWindow* window){
+    std::vector<Message> &InputHandler::handle_input(sf::RenderWindow* window){
         
         input.clear();
         Message mes;
@@ -90,6 +90,7 @@
             if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("NEXT_ANIM")))  mes.setCheck("NEXT", false);
             if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("PREV_ANIM")))  mes.setCheck("PREV", false);
             if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("RESET_ANIM"))) mes.setCheck("RESET", false);
+            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("NR"))) mes.setCheck("NR", true);
 
             // if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("MOVE_UP")))    mes.setDir("MOVE", sf::Vector2i(0,0));
             // if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("MOVE_LEFT")))  mes.setDir("MOVE", sf::Vector2i(0,0));

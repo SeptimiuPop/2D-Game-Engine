@@ -1,5 +1,5 @@
-#include "Includes.h"
-#include "Game.h"
+#include "Headers/Includes.h"
+#include "Headers/Game.h"
 
 
 int main(){
@@ -8,7 +8,7 @@ int main(){
     // std::pair<std::string, int> pair;
 
     Game game;
-    game.run();
+    game.Run();
 
     return 0;
 }
