@@ -3,17 +3,15 @@
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- CONSTRUCTOR / DESTRUCTOR -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-    Game::Game(){
-        engine = std::make_shared<Engine>();
+    Game::Game():
+        engine(std::make_shared<Engine>()){
         initWindow();
         initBgMusic();
         initEntities();
         initUIElements();
     }
 
-    Game::~Game(){
-        delete window;
-    }
+    Game::~Game(){}
 
 
 
@@ -37,13 +35,10 @@
 
         config.close();
         */
-
-        width = 1920;
-        height = 1080;
-        window = new sf::RenderWindow(sf::VideoMode(width,height), "Tale-of-a-Mouse", sf::Style::Fullscreen);  
-        
-        window->setKeyRepeatEnabled(false);
-        window->setVerticalSyncEnabled(true);
+        fullscreen = false;
+        setVideoMode();
+        // engine->_window->setKeyRepeatEnabled(false);
+        // engine->_window->setVerticalSyncEnabled(true);
         view.setSize(sf::Vector2f(1440,810));
     }
 
@@ -80,17 +75,17 @@
         ui[0].initSprite(engine->_assets->getTexture("ui"),0.2,900,300);
     }
 
-    void Game::changeVideoMode(){
+    void Game::setVideoMode(){
         fullscreen = !fullscreen;
         if (fullscreen){
             width = 1920;
             height = 1080;
-            window->create(sf::VideoMode(width, height),"Tale-of-a-Mouse", sf::Style::Fullscreen);
+            engine->_window->create(sf::VideoMode(width, height),"Tale-of-a-Mouse", sf::Style::Fullscreen);
         }
         else{
             width = 960;
             height = 540;
-            window->create(sf::VideoMode(width, height),"Tale-of-a-Mouse", sf::Style::Default);
+            engine->_window->create(sf::VideoMode(width, height),"Tale-of-a-Mouse", sf::Style::Default);
         }
     }
 
@@ -108,12 +103,12 @@
         bool dash = false;
         sf::Vector2i move_direction;
 
-        std::vector<Message> inputs = engine->_inputs->handle_input(window);
+        std::vector<Message> inputs = engine->_inputs->handle_input();
 
         for(auto& action : inputs){
             // window actions
-            if(action.message == "CLOSE") window->close();
-            if(action.message == "FULLSCREEN") changeVideoMode();
+            if(action.message == "CLOSE") engine->_window->close();
+            if(action.message == "FULLSCREEN") setVideoMode();
             
             // mock animation actions
             if(action.message == "DRAW") draw = action.check;
@@ -121,7 +116,7 @@
             if(action.message == "PREV") entities[1].prev_anim();
             if(action.message == "RESET") entities[1].reset_anim();
 
-            if(action.message == "NR") map.generateRoom();
+            if(action.message == "NR") room.generateRoom();
             
             // movement actions
             if(action.message == "DASH") dash = action.check;
@@ -130,15 +125,15 @@
         }
 
         entities[1].animate(dt, draw);
-        entities[2].update(dt, move_direction, slowed, dash, window);
+        entities[2].update(dt, move_direction, slowed, dash, engine->_window);
 
     }
 
     void Game::UpdateView(){
         /* Sets the view of the window around the player */
-        sf::Vector2i cursor = sf::Mouse::getPosition(*window);
+        sf::Vector2i cursor = sf::Mouse::getPosition(*engine->_window);
         sf::Vector2f player = entities[2].getPozition();
-        sf::Vector2f view_bounds = view.getSize();
+        sf::Vector2f view_bounds;
 
         // center the mouse position
         cursor.x -= width/2;
@@ -159,30 +154,30 @@
 
     void Game::Render(){  
 
-        window->clear();
+        engine->_window->clear();
         
         // draw game elements in view
-        window->setView(view);
-        map.draw(window, engine->_assets->getTexture("tileset"));
+        engine->_window->setView(view);
+        room.draw(engine->_window, engine->_assets->getTexture("tileset"));
         for(auto& en:entities) 
-            en.draw(window,1920,1080);
+            en.draw(engine->_window);
         
 
         // draw UI elements
-        window->setView(window->getDefaultView());
+        engine->_window->setView(engine->_window->getDefaultView());
         for(auto& en:ui) 
-            en.draw(window,1920,1080);
+            en.draw(engine->_window);
         
 
-        window->display();
+        engine->_window->display();
     }
 
     void Game::Run(){
-        while(window->isOpen()){ 
+        while(engine->_window->isOpen()){ 
             dt = dtClock.getElapsedTime().asSeconds();
             dtClock.restart();
 
-            if(window->hasFocus()){
+            if(engine->_window->hasFocus()){
                 Update();
                 Render();
             }

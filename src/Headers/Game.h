@@ -1,24 +1,7 @@
 #pragma once
+#include "Engine.h"
 #include "Entity.h"
-#include "InputHandler.h"
-#include "ResourceManager.h"
-#include "Map.h"
-
-struct Engine{
-
-    std::shared_ptr<sf::RenderWindow> _window;
-    std::unique_ptr<ResourceManager> _assets;
-    std::unique_ptr<InputHandler> _inputs;
-
-    Engine(){
-        _window = std::make_shared<sf::RenderWindow>();
-        _assets = std::make_unique<ResourceManager>();
-        _inputs = std::make_unique<InputHandler>();
-    }
-
-};
-
-
+#include "Room.h"
 
 class Game{
 
@@ -27,14 +10,12 @@ class Game{
         //variables
         std::shared_ptr<Engine> engine;
 
-        
-        sf::RenderWindow *window;
         sf::View view; 
         int width;
         int height; 
         bool fullscreen = true;
 
-        Map map;
+        Room room;
 
         std::vector<Entity> ui;
         std::vector<Entity> entities;
@@ -52,7 +33,7 @@ class Game{
         void initBgMusic();
         void initEntities();
         void initUIElements();
-        void changeVideoMode();
+        void setVideoMode();
 
     public:
 

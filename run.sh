@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./clear.sh
+clear
 cd bin
 
 echo "Building the enviroment..."

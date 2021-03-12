@@ -6,6 +6,8 @@ class InputHandler{
 
     private:
         // variables
+        std::shared_ptr<sf::RenderWindow> window;
+        
         std::map<std::string, int> supportedKeys;
         std::map<std::string, int> keyBinds;
 
@@ -19,10 +21,10 @@ class InputHandler{
         void initKeys();
 
     public:
-        InputHandler();
+        InputHandler(std::shared_ptr<sf::RenderWindow>);
         ~InputHandler();
 
-        std::vector<Message> &handle_input(sf::RenderWindow* window);
+        std::vector<Message> &handle_input();
         void handle_press_events();
         void handle_release_events();
 };

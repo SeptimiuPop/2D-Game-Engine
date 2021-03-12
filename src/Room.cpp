@@ -1,15 +1,15 @@
 #include "Headers/Includes.h"
-#include "Headers/Map.h"
+#include "Headers/Room.h"
 
 
-    Map::Map(): roomCount(0){
+    Room::Room(): roomCount(0){
         generateRoom();
     }
 
-    Map::~Map(){}
+    Room::~Room(){}
 
 
-    void Map::initMap(){
+    void Room::initMap(){
         map.clear();
         for(int i=0; i<width; i++){
             std::vector<Tile> row;
@@ -52,7 +52,7 @@
         }
     }
 
-    void Map::generateRoom(){
+    void Room::generateRoom(){
         if(roomCount == 0){
             height = 15;
             width = 20;
@@ -69,7 +69,7 @@
         initMap();
     }
 
-    void Map::draw(sf::RenderWindow* window, sf::Texture& tx){
+    void Room::draw(std::shared_ptr<sf::RenderWindow> window, sf::Texture& tx){
         
         // some mock-up sprite to draw on
         sf::Sprite sprite;

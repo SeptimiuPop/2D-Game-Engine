@@ -1,7 +1,7 @@
 #pragma once
 #include "Tile.h"
 
-class Map{
+class Room{
     private:
     
         std::vector<std::vector<Tile>> map;
@@ -13,11 +13,11 @@ class Map{
 
     public:
     
-        Map();
-        ~Map();
+        Room();
+        ~Room();
 
         void generateRoom();
 
-        void draw(sf::RenderWindow* window, sf::Texture& tx);
+        void draw(std::shared_ptr<sf::RenderWindow> window, sf::Texture& tx);
 
 };

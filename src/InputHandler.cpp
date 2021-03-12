@@ -4,7 +4,10 @@
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- CONSTRUCTOR / DESTRUCTOR -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 
 
-    InputHandler::InputHandler(){initKeys();}
+    InputHandler::InputHandler(std::shared_ptr<sf::RenderWindow> game_window)
+        :window(game_window){
+        initKeys();
+        }
     InputHandler::~InputHandler(){}
 
 
@@ -46,7 +49,7 @@
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- PUBLIC  FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
 
-    std::vector<Message> &InputHandler::handle_input(sf::RenderWindow* window){
+    std::vector<Message> &InputHandler::handle_input(){
         
         input.clear();
         Message mes;

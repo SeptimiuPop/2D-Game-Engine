@@ -43,12 +43,12 @@ class Entity{
         void dash(const float & dt);
 
         void move(const float & dt, sf::Vector2i dir, bool slowed);
-        void setFacing(sf::RenderWindow* window, sf::Vector2i dir);
+        void setFacing(std::shared_ptr<sf::RenderWindow> window, sf::Vector2i dir);
         void play_anim(const float & dt, bool moves);
         void play_sound(const float & dt, bool play);
         
-        void update(const float &dt, sf::Vector2i dir, bool slowed, bool dash, sf::RenderWindow* window);
-        void draw(sf::RenderWindow* window, int width, int height);
+        void update(const float &dt, sf::Vector2i dir, bool slowed, bool dash, std::shared_ptr<sf::RenderWindow> window);
+        void draw(std::shared_ptr<sf::RenderWindow> window);
 
         // FOR FACING DIRECTION 
         void update_on_target(float mouse_x, float mouse_y);

@@ -87,7 +87,7 @@
 
     }
 
-    void Entity::update(const float &dt, sf::Vector2i dir, bool slowed, bool check_dash, sf::RenderWindow* window){
+    void Entity::update(const float &dt, sf::Vector2i dir, bool slowed, bool check_dash, std::shared_ptr<sf::RenderWindow> window){
      
         if(state == "Dash") dash(dt);
 
@@ -114,7 +114,7 @@
 
     }
 
-    void Entity::draw(sf::RenderWindow* window, int width, int height){
+    void Entity::draw(std::shared_ptr<sf::RenderWindow> window){
     
         //if the sprite is out of bounds wrap arround
         // if (x + 128 < 0) x = width; 
@@ -131,7 +131,7 @@
 
     // Eventually only the player will have this and just store the window pointer inside the class
     // OR COULD EVEN BE AN COMPONENT
-    void Entity::setFacing(sf::RenderWindow* window, sf::Vector2i dir){
+    void Entity::setFacing(std::shared_ptr<sf::RenderWindow> window, sf::Vector2i dir){
         if(window != nullptr){
             sf::Vector2i mouse = sf::Mouse::getPosition(*window);
             sf::Vector2i view;
