@@ -47,11 +47,12 @@
 
 
     void Entity::dash(const float & dt){
-        if(abs(x-start.x) > 150 || abs(y-start.y) > 150){
-            speed = 300;
+        if(abs(x-start.x) > 50 || abs(y-start.y) > 50){
+            speed = 100;
             state = "Idle";
         }
         else {
+            
             speed += acc;
             x+= dash_dir.x*speed*dt;
             y+= dash_dir.y*speed*dt;
@@ -60,8 +61,8 @@
     }
 
     void Entity::move(const float & dt, sf::Vector2i dir, bool slowed){
-        if(slowed)  speed = 50;
-        else if(speed < 300)speed += acc;
+        if(slowed)  speed = 5;
+        else if(speed < 100)speed += acc;
 
         x+= dir.x*speed*dt;
         y+= dir.y*speed*dt;
@@ -77,7 +78,7 @@
         else{
             //only on certain frames animate the sprite
             de += speed*dt;     // de is the time buffer for the next frame of the animation
-            if(de >= 25) {de = 0; rect.left += rect.width;}
+            if(de >= 8) {de = 0; rect.left += rect.width;}
             if(rect.left>352) rect.left=0;
         }
 
@@ -216,7 +217,7 @@
 
     void Entity::play_sound(const float & dt, bool play){
         if(play){
-            if(sound_buffer > 150){
+            if(sound_buffer > 50){
                 sound_buffer = 0;
                 sound.play();
             }

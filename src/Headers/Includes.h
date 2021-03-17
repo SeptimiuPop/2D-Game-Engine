@@ -5,7 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <memory>
-#include <cstdlib>
+#include <stack>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>

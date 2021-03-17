@@ -19,6 +19,9 @@
         loadTexture("ui","../assets/Textures/ui_health.png");
         loadTexture("tileset","../assets/Textures/Tileset.png");
 
+        // fonts
+        loadFont("main_menu", "../assets/Fonts/alphbeta.ttf");
+
         // sound
         loadSound("walk_stone","../assets/Audio/Gungeon/boot_stone_01.wav");
         loadSound("walk_carpet","../assets/Audio/Gungeon/boot_carpet_01.wav");

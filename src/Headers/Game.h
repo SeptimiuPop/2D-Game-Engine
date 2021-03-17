@@ -2,6 +2,7 @@
 #include "Engine.h"
 #include "Entity.h"
 #include "Room.h"
+#include "GameMenu.h"
 
 class Game{
 
@@ -10,9 +11,10 @@ class Game{
         //variables
         std::shared_ptr<Engine> engine;
 
+
+        GameMenu menu;
+
         sf::View view; 
-        int width;
-        int height; 
         bool fullscreen = true;
 
         Room room;
@@ -45,7 +47,11 @@ class Game{
         void UpdatePlayerEvents();
         void UpdateView();
         void Update();
+
+        void RenderGameEntities();
+        void RenderMenu();
         void Render();
+        
         void Run();
 
 };

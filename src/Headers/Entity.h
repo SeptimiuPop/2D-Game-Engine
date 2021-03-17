@@ -1,5 +1,4 @@
 #pragma once
-#include "Animation.h"
 
 class Entity{
 
@@ -22,8 +21,8 @@ class Entity{
         float scale;
         float x;
         float y;
-        float speed=300;
-        float acc= 10;
+        float speed=100;
+        float acc= 1;
 
         // FOR ANIMATION -> TO BE MOVED IN SEPARATE COMPONENT
         bool animating = false;

@@ -4,6 +4,7 @@
 #include "ResourceManager.h"
 
 struct Engine{
+    std::string game_state;
     std::shared_ptr<sf::RenderWindow> _window;
     std::unique_ptr<ResourceManager> _assets;
     std::unique_ptr<InputHandler> _inputs;

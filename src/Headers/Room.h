@@ -1,9 +1,12 @@
 #pragma once
+#include "Engine.h"
 #include "Tile.h"
 
 class Room{
     private:
     
+        std::shared_ptr<Engine> engine;
+
         std::vector<std::vector<Tile>> map;
         int height, width;
         int roomCount;
@@ -16,8 +19,10 @@ class Room{
         Room();
         ~Room();
 
+        void setEngine(std::shared_ptr<Engine> engine);
+        
         void generateRoom();
 
-        void draw(std::shared_ptr<sf::RenderWindow> window, sf::Texture& tx);
+        void draw();
 
 };
