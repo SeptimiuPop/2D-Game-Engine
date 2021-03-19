@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./clear.sh
+# ./clear.sh
 
 echo
 echo "Add commit message: "
