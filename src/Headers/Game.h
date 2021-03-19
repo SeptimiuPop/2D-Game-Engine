@@ -12,12 +12,12 @@ class Game{
         std::shared_ptr<Engine> engine;
 
 
-        GameMenu menu;
 
         sf::View view; 
         bool fullscreen = true;
 
         Room room;
+        GameMenu menu;
 
         std::vector<Entity> ui;
         std::vector<Entity> entities;
@@ -48,8 +48,6 @@ class Game{
         void UpdateView();
         void Update();
 
-        void RenderGameEntities();
-        void RenderMenu();
         void Render();
         
         void Run();

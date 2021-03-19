@@ -49,5 +49,8 @@
         "bit": "cpp",
         "cstring": "cpp",
         "cinttypes": "cpp"
+    },
+    "files.watcherExclude": {
+        "**/target": true
     }
 }
