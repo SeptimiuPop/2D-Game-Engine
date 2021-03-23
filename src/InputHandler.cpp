@@ -1,9 +1,21 @@
-#include "Includes.h"
-#include "InputHandler.h"
+#include "Headers/Includes.h"
+#include "Headers/InputHandler.h"
 
-    // private methods
+    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- CONSTRUCTOR / DESTRUCTOR -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
+
+
+    InputHandler::InputHandler(std::shared_ptr<sf::RenderWindow> game_window)
+        :window(game_window){
+        initKeys();
+        }
+    InputHandler::~InputHandler(){}
+
+
+    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- PRIVATE FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
 
     void InputHandler::initKeys(){
+        
         /*Create the game's supported keys list and map them to some key bindings*/
 
         // Open config file for the supported keys
@@ -18,7 +30,9 @@
         }
         config.close();
         
-        // Open config file for keybinds
+
+        /* Open config file to assign the keybinds*/
+
         config.open("../config/key_binds.ini");
         if(config.is_open()){
             std::string key;
@@ -31,18 +45,16 @@
         config.close();
     }
 
-    // public methods
 
-    InputHandler::InputHandler(){initKeys();}
-    InputHandler::~InputHandler(){}
+    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- PUBLIC  FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-    std::vector<Message> InputHandler::handle_input(sf::RenderWindow* window){
+
+    std::vector<Message> &InputHandler::handle_input(){
         
         input.clear();
         Message mes;
 
-
-        handle_push_events();
+        handle_press_events();
         while(window->pollEvent(sfEvent)){
             handle_release_events();
         }
@@ -50,21 +62,23 @@
         return input;
     }
 
-    void InputHandler::handle_push_events(){
+    void InputHandler::handle_press_events(){
         
         Message mes;
 
         // Key pressed events
         if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("CLOSE")))) {mes.setCheck("CLOSE", true);input.push_back(mes);}
         if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("SLOW"))))  {mes.setCheck("SLOW", true); input.push_back(mes);}
-        
-        if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("MOVE_UP"))))    {mes.setDir("MOVE", sf::Vector2i( 0,-1)); input.push_back(mes);}
-        if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("MOVE_LEFT"))))  {mes.setDir("MOVE", sf::Vector2i(-1, 0)); input.push_back(mes);}
-        if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("MOVE_RIGHT")))) {mes.setDir("MOVE", sf::Vector2i( 1, 0)); input.push_back(mes);}
-        if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("MOVE_DOWN"))))  {mes.setDir("MOVE", sf::Vector2i( 0, 1)); input.push_back(mes);}
         if(mouse.isButtonPressed(mouse.Right)) {mes.setCheck("DRAW", true); input.push_back(mes);}           
+        
+        // Movement only updates once to display a final direction
+        if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("MOVE_UP"))))    mes.setDir("MOVE", sf::Vector2i( 0,-1));
+        if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("MOVE_LEFT"))))  mes.setDir("MOVE", sf::Vector2i(-1, 0));
+        if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("MOVE_RIGHT")))) mes.setDir("MOVE", sf::Vector2i( 1, 0));
+        if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("MOVE_DOWN"))))  mes.setDir("MOVE", sf::Vector2i( 0, 1));
+        if(mes.message == "MOVE") 
+            input.push_back(mes);
     }
-
 
     void InputHandler::handle_release_events(){
         
@@ -75,14 +89,16 @@
             // Resize will always be alt+enter so no keybinding set here
             if(sfEvent.key.code == key.Enter && key.isKeyPressed(key.LAlt)) mes.setCheck("FULLSCREEN", true);  
             if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("SLOW")))  mes.setCheck("SLOW", false); 
+            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("DASH")))  mes.setCheck("DASH", true); 
             if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("NEXT_ANIM")))  mes.setCheck("NEXT", false);
             if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("PREV_ANIM")))  mes.setCheck("PREV", false);
             if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("RESET_ANIM"))) mes.setCheck("RESET", false);
+            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("NR"))) mes.setCheck("NR", true);
 
-            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("MOVE_UP")))    mes.setDir("MOVE", sf::Vector2i(0,0));
-            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("MOVE_LEFT")))  mes.setDir("MOVE", sf::Vector2i(0,0));
-            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("MOVE_DOWN")))  mes.setDir("MOVE", sf::Vector2i(0,0));
-            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("MOVE_RIGHT"))) mes.setDir("MOVE", sf::Vector2i(0,0));
+            // if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("MOVE_UP")))    mes.setDir("MOVE", sf::Vector2i(0,0));
+            // if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("MOVE_LEFT")))  mes.setDir("MOVE", sf::Vector2i(0,0));
+            // if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("MOVE_DOWN")))  mes.setDir("MOVE", sf::Vector2i(0,0));
+            // if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("MOVE_RIGHT"))) mes.setDir("MOVE", sf::Vector2i(0,0));
         }
 
         if (sfEvent.type == sf::Event::MouseButtonReleased)

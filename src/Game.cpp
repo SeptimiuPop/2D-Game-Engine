@@ -1,5 +1,26 @@
-#include "Includes.h"
-#include "Game.h"
+#include "Headers/Includes.h"
+#include "Headers/Game.h"
+
+    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- CONSTRUCTOR / DESTRUCTOR -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+    Game::Game():
+        engine(std::make_shared<Engine>()){
+        engine->game_state="MAIN_MENU";
+        
+        menu = GameMenu(engine);
+        menu.Init();
+
+        initWindow();
+        initBgMusic();
+        initEntities();
+        initUIElements();
+    }
+
+    Game::~Game(){}
+
+
+
+    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- PRIVATE FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
     //initialization
     void Game::initWindow(){
@@ -19,155 +40,169 @@
 
         config.close();
         */
+        fullscreen = false;
+        setVideoMode();
+        view.setSize(sf::Vector2f(320,180));
+    }
 
-        width = 1920;
-        height = 1080;
-        window = new sf::RenderWindow(sf::VideoMode(width,height), "Tale-of-a-Mouse", sf::Style::Fullscreen);  
-        
-        // window->setKeyRepeatEnabled(false);
+    void Game::initBgMusic(){
+        if (!music.openFromFile("../assets/Audio/Timberbrook.wav"))
+            std::cout<<"\n\nSo silent..\n\n";
+
+        music.play();
+        music.setVolume(100.f);
+        music.setLoop(true);
+        music.setPitch(1.f);
     }
 
     void Game::initEntities(){
         
-        Entity bg(0,0);
-        entities.push_back(bg);
+        room.setEngine(engine);
         
-        Entity animated(100,0);
-        entities.push_back(animated);
-        
-        Entity player(200,200);
-        entities.push_back(player);
-        
-        Entity tileset(100,500);
-        entities.push_back(tileset);
-        
-        entities[0].initSprite("../assets/bg.jpeg", 1, 1920, 1080);
-        entities[1].initSprite("../assets/Ground_Monk.png", 3.5, 100, 64);
-        entities[2].initSprite("../assets/sprite.png",4,32,32);
-        // entities[1].initSprite("../assets/Tileset.png",4,16,16);
+        for(int i=0; i<3; i++){
+            Entity en(i*200,0);
+            entities.push_back(en);
+        }
 
+        // entities[0].initSprite(engine->_assets->getTexture("bg"), 2, 1920, 1088);
+        entities[1].initSprite(engine->_assets->getTexture("mo"), 1, 100, 64);
+        entities[2].initSprite(engine->_assets->getTexture("pl"),1,32,32);
+        
+        // sound
+        entities[2].initSound(engine->_assets->getSound("walk_stone"), 60.f, 1.f);
     }
 
-    void Game::changeVideoMode(){
+    void Game::initUIElements(){
+        
+        Entity ui_health(20,20);
+        ui.push_back(ui_health);
+        
+        ui[0].initSprite(engine->_assets->getTexture("ui"),0.2,900,300);
+    }
+
+    void Game::setVideoMode(){
         fullscreen = !fullscreen;
         if (fullscreen){
-            width = 1920;
-            height = 1080;
-            window->create(sf::VideoMode(width, height),"Tale-of-a-Mouse", sf::Style::Fullscreen);
+            engine->_window->create(sf::VideoMode(1920, 1080),"Tale-of-a-Mouse", sf::Style::Fullscreen);
         }
         else{
-            width = 960;
-            height = 540;
-            window->create(sf::VideoMode(width, height),"Tale-of-a-Mouse", sf::Style::Default);
+            engine->_window->create(sf::VideoMode(960, 540),"Tale-of-a-Mouse", sf::Style::Default);
         }
     }
 
-    //constructor/destructor
-    Game::Game(){
-        
-        initWindow();
-        initEntities();
 
-        view.setSize(sf::Vector2f(1440,810));     
+
+    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- PUBLIC  FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+    void Game::Run(){
+        while(engine->_window->isOpen()){ 
+            dt = dtClock.getElapsedTime().asSeconds();
+            dtClock.restart();
+
+
+            if(engine->_window->hasFocus()){
+                Update();
+                Render();
+            }
+        }
     }
 
-    Game::~Game(){
-        delete window;
+
+    void Game::Render(){  
+        engine->_window->clear();
+
+        if(engine->game_state == "IN_GAME"){
+            // draw game elements in view
+            engine->_window->setView(view);
+            room.draw();
+            for(auto& en:entities) 
+                en.draw(engine->_window);
+            
+
+            // draw UI elements
+            engine->_window->setView(engine->_window->getDefaultView());
+            for(auto& en:ui) 
+                en.draw(engine->_window);
+        }
+        else{
+            menu.Draw();
+        }
+
+        engine->_window->display();
     }
 
 
-    //function
-    void Game::UpdateSFMLEvents(){
+
+
+    void Game::Update(){   
+        if(engine->game_state == "IN_GAME"){
+            UpdatePlayerEvents();
+            UpdateView();
+        }
+        else{
+            std::string state = engine->game_state;
+            menu.Update();
+            if(engine->game_state != state && engine->game_state == "MAIN_MENU")
+                menu.Init();
+        }
+    }
+
+
+    void Game::UpdatePlayerEvents(){
+
+        /* Calls the input handler to get user input as vector of messages 
+        * and iterates the list to take action */
 
         bool slowed = false;
         bool draw = false;
-        bool animate = false;
+        bool dash = false;
+        sf::Vector2i move_direction;
 
-        std::vector<Message> inputs = handler.handle_input(window);
-
+        std::vector<Message> inputs = engine->_inputs->handle_input();
 
         for(auto& action : inputs){
-
-            if(action.message == "CLOSE") window->close();
-            if(action.message == "FULLSCREEN") changeVideoMode();
-            if(action.message == "SLOW") slowed = action.check;
+            // window actions
+            if(action.message == "CLOSE") {
+                engine->game_state = "PAUSED";
+                menu.Init();
+            }
+            if(action.message == "FULLSCREEN") setVideoMode();
+            
+            // mock animation actions
             if(action.message == "DRAW") draw = action.check;
             if(action.message == "NEXT") entities[1].next_anim();
             if(action.message == "PREV") entities[1].prev_anim();
             if(action.message == "RESET") entities[1].reset_anim();
-            if(action.message == "MOVE"){
-                if(action.dir.x != 0 || action.dir.y != 0){
-                    entities[2].move(action.dir.x, action.dir.y, slowed, dt);
-                    animate = true;
-                }
 
-            }
+            if(action.message == "NR") room.generateRoom();
+            
+            // movement actions
+            if(action.message == "DASH") dash = action.check;
+            if(action.message == "SLOW") slowed = action.check;
+            if(action.message == "MOVE") move_direction = action.dir;
         }
 
-        sf::Vector2i localPosition = mouse.getPosition(*window);
-        sf::Vector2i screen_center(width/2, height/2);
-
-        entities[2].updateAnimation(dt, animate);
-        entities[2].update_on_mouse(screen_center, localPosition);
-
-        if(draw){
-            entities[1].animate(dt);
-        }
+        entities[1].animate(dt, draw);
+        entities[2].update(dt, move_direction, slowed, dash, engine->_window);
 
     }
 
     void Game::UpdateView(){
+        /* Sets the view of the window around the player */
+        sf::Vector2i cursor = sf::Mouse::getPosition(*engine->_window);
         sf::Vector2f player = entities[2].getPozition();
-        sf::Vector2i cursor = mouse.getPosition(*window);
-        sf::Vector2f view_bounds = view.getSize();
 
         // center the mouse position
-        cursor.x -= width/2;
-        cursor.y -= height/2;
+        cursor.x -= engine->_window->getSize().x/2;
+        cursor.y -= engine->_window->getSize().y/2;
         
         // set the view position to be centered on the player
         // plus a small offset given by the mouse pozition
-        view_bounds.x = player.x + (cursor.x)/8;
-        view_bounds.y = player.y + (cursor.y)/8;
+        sf::Vector2f view_bounds;
+        view_bounds.x = player.x + (cursor.x)/32;
+        view_bounds.y = player.y + (cursor.y)/16;
 
         view.setCenter(view_bounds);
     }
 
-    void Game::update(){
-        UpdateSFMLEvents();
-        UpdateView();
 
-        dt = dtClock.getElapsedTime().asSeconds();
-        dtClock.restart(); 
-    }
-
-    void Game::render(){  
-
-        sf::RectangleShape rect;
-        rect.setFillColor(sf::Color::Red);
-        rect.setSize(sf::Vector2f(150.f,25.f));
-        rect.setPosition(20,20);
-
-        // draw game elements in view
-        window->setView(view);
-
-        window->clear();
-
-        for(auto& en : entities) 
-            en.draw(window,1920,1080);
-
-        // draw UI elements
-        window->setView(window->getDefaultView());
-        window->draw(rect);
-
-        window->display();
-    }
-
-    void Game::run(){
-        
-        while(window->isOpen()){
-            update();
-            render();
-
-        }
-    }

@@ -1,6 +1,6 @@
 #!/bin/bash
 
 
-rm build/*.o build/main.exe
+rm bin/*.o bin/main.exe
 
 clear
