@@ -13,9 +13,8 @@
 
     void ResourceManager::initAssets(){
         // textures
-        loadTexture("bg","../assets/Textures/Test_bg.png");
         loadTexture("mo","../assets/Textures/Ground_Monk.png");
-        loadTexture("pl","../assets/Textures/sprite.png");
+        loadTexture("pl","../assets/Textures/Sprites.png");
         loadTexture("ui","../assets/Textures/ui_health.png");
         loadTexture("tileset","../assets/Textures/Tileset.png");
 
@@ -23,8 +22,8 @@
         loadFont("main_menu", "../assets/Fonts/alphbeta.ttf");
 
         // sound
-        loadSound("walk_stone","../assets/Audio/Gungeon/boot_stone_01.wav");
-        loadSound("walk_carpet","../assets/Audio/Gungeon/boot_carpet_01.wav");
+        loadSound("walk_stone","../assets/Audio/player/boot_stone_01.wav");
+        loadSound("walk_carpet","../assets/Audio/player/boot_carpet_01.wav");
     }
 
 

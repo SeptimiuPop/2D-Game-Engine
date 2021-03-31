@@ -45,24 +45,7 @@
         config.close();
     }
 
-
-    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- PUBLIC  FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
-
-
-    std::vector<Message> &InputHandler::handle_input(){
-        
-        input.clear();
-        Message mes;
-
-        handle_press_events();
-        while(window->pollEvent(sfEvent)){
-            handle_release_events();
-        }
-
-        return input;
-    }
-
-    void InputHandler::handle_press_events(){
+    void InputHandler::handle_game_events(){
         
         Message mes;
 
@@ -78,31 +61,40 @@
         if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("MOVE_DOWN"))))  mes.setDir("MOVE", sf::Vector2i( 0, 1));
         if(mes.message == "MOVE") 
             input.push_back(mes);
-    }
 
-    void InputHandler::handle_release_events(){
-        
-        Message mes;
-        
+
         // Key released events
-        if(sfEvent.type == sf::Event::KeyReleased){
-            // Resize will always be alt+enter so no keybinding set here
-            if(sfEvent.key.code == key.Enter && key.isKeyPressed(key.LAlt)) mes.setCheck("FULLSCREEN", true);  
-            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("SLOW")))  mes.setCheck("SLOW", false); 
-            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("DASH")))  mes.setCheck("DASH", true); 
-            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("NEXT_ANIM")))  mes.setCheck("NEXT", false);
-            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("PREV_ANIM")))  mes.setCheck("PREV", false);
-            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("RESET_ANIM"))) mes.setCheck("RESET", false);
-            if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("NR"))) mes.setCheck("NR", true);
+        while(window->pollEvent(sfEvent)){
+            if(sfEvent.type == sf::Event::KeyReleased){
+                // Resize will always be alt+enter so no keybinding set here
+                if(sfEvent.key.code == key.Enter && key.isKeyPressed(key.LAlt)) mes.setCheck("FULLSCREEN", true);  
+                if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("SLOW")))  mes.setCheck("SLOW", false); 
+                if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("DASH")))  mes.setCheck("DASH", true); 
+                if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("NEXT_ANIM")))  mes.setCheck("NEXT", false);
+                if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("PREV_ANIM")))  mes.setCheck("PREV", false);
+                if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("RESET_ANIM"))) mes.setCheck("RESET", false);
+            }
 
-            // if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("MOVE_UP")))    mes.setDir("MOVE", sf::Vector2i(0,0));
-            // if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("MOVE_LEFT")))  mes.setDir("MOVE", sf::Vector2i(0,0));
-            // if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("MOVE_DOWN")))  mes.setDir("MOVE", sf::Vector2i(0,0));
-            // if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("MOVE_RIGHT"))) mes.setDir("MOVE", sf::Vector2i(0,0));
+            if (sfEvent.type == sf::Event::MouseButtonReleased)
+                if (sfEvent.mouseButton.button == mouse.Right)
+                    mes.setCheck("DRAW", false);
+            input.push_back(mes);
         }
-
-        if (sfEvent.type == sf::Event::MouseButtonReleased)
-            if (sfEvent.mouseButton.button == mouse.Right)
-                mes.setCheck("DRAW", false);
-        input.push_back(mes);
     }
+
+    /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- PUBLIC  FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+
+    std::vector<Message> &InputHandler::getInputs(){
+        return input;
+    }
+    
+    void InputHandler::handle_inputs(){
+        
+        input.clear();
+        Message mes;
+
+        handle_game_events();
+    }
+
+

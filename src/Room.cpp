@@ -1,18 +1,38 @@
 #include "Headers/Includes.h"
 #include "Headers/Room.h"
+#include "Headers/InputComponent.h"
+#include "Headers/PhysicsComponent.h"
+#include "Headers/RenderComponent.h"
+
 
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- CONSTRUCTOR / DESTRUCTOR -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
 
 
     Room::Room(): roomCount(0){
         generateRoom();
     }
 
+
     Room::~Room(){}
 
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- PRIVATE FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+    void Room::setEngine(std::shared_ptr<Engine> game_engine){
+        engine = game_engine;
+        initPlayer();
+    }
+
+    void Room::initPlayer(){
+        
+        InputComponent input;
+        PhysicsComponent physics;
+        RenderComponent renderer;
+        renderer.initComponent(engine->_assets->getTexture("pl"), 16, 32);
+        player = Entity(input, physics, renderer);
+    }
 
 
     void Room::initMap(){
@@ -22,14 +42,30 @@
             for(int j=0; j<height; j++){
             
                 Tile tile(sf::Vector2i(i*16,j*16), true);
-                // if we are at the edge of the map
-                if(i==0||i==width-1||j==0||j==height-1)
-                    tile.setTexturePos(sf::IntRect(0,16,16,16));
-                // if we are at the interior of the map
-                else{
-                    tile.setTexturePos(sf::IntRect(32,48,16,16));
+
+
+                if(j == 0){
+                    if(i==0)
+                        tile.setTexturePos(sf::IntRect(0,0,16,16));
+                    if(i==width-1)
+                        tile.setTexturePos(sf::IntRect(48,0,16,16));
+                    else
+                        tile.setTexturePos(sf::IntRect((i%2+1)*16,0,16,16));
                 }
-                
+                else if(j == height-1){
+                    if(i==0)
+                        tile.setTexturePos(sf::IntRect(0,48,16,16));
+                    if(i==width-1)
+                        tile.setTexturePos(sf::IntRect(48,48,16,16));
+                    else
+                        tile.setTexturePos(sf::IntRect((i%2+1)*16,48,16,16));
+                }
+                else if(i==0)
+                    tile.setTexturePos(sf::IntRect(0,(j%2+1)*16,16,16));
+                else if(i==width-1)
+                    tile.setTexturePos(sf::IntRect(48,(j%2+1)*16,16,16));
+                else
+                    tile.setTexturePos(sf::IntRect(80,48,16,16));
                 //place the tile in the row map 
                 row.push_back(tile);
             }
@@ -42,10 +78,6 @@
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- PUBLIC  FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-
-    void Room::setEngine(std::shared_ptr<Engine> game_engine){
-        engine = game_engine;
-    }
 
     void Room::generateRoom(){
         if(roomCount == 0){
@@ -65,6 +97,8 @@
     }
 
     void Room::draw(){
+        
+        player.update(20, engine->_window);
         
         // some mock-up sprite to draw on
         sf::Sprite sprite;

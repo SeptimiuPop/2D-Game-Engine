@@ -23,8 +23,8 @@ class GameMenu{
     public:
 
         GameMenu();
-        GameMenu(std::shared_ptr<Engine>);
-
+        
+        void setEngine(std::shared_ptr<Engine>);
         void Init();
 
         void Update();

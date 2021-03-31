@@ -6,13 +6,13 @@
 
     GameMenu::GameMenu(){}
 
-    GameMenu::GameMenu(std::shared_ptr<Engine> game_engine):
-        engine(game_engine){
-    }
-
-
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- PRIVATE FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
+
+    void GameMenu::setEngine(std::shared_ptr<Engine> game_engine){
+        engine = game_engine;
+    }
+
 
     void GameMenu::InitMessage(){
         menu_message.setFont(engine->_assets->getFont("main_menu"));

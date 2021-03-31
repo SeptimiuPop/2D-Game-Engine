@@ -19,13 +19,14 @@ class InputHandler{
 
         // functions
         void initKeys();
+        void handle_menu_events();
+        void handle_game_events();
 
     public:
         InputHandler(std::shared_ptr<sf::RenderWindow>);
         ~InputHandler();
 
-        std::vector<Message> &handle_input();
-        void handle_press_events();
-        void handle_release_events();
+        std::vector<Message> &getInputs();
+        void handle_inputs();
 };
 
