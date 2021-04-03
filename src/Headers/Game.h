@@ -15,7 +15,6 @@ class Game{
 
         bool fullscreen = true;
 
-
         sf::Clock dtClock;
         float dt;
 

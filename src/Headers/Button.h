@@ -15,7 +15,7 @@ class Button{
 
         void setBgColor(sf::Color color);
         void setTextColor(sf::Color color);
-        std::string getLabel();
+        sf::String getLabel();
 
         bool isMouseOver(sf::Vector2i mouse);
         void Draw(std::shared_ptr<sf::RenderWindow> window);
