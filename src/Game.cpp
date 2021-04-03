@@ -23,22 +23,6 @@
 
     //initialization
     void Game::initWindow(){
-        /*
-        std::ifstream config("../config/init_window.txt");
-        std::string title = "None";
-        sf::VideoMode bounds(1920, 1080);
-        int framerate = 120;
-
-        if(config.is_open()){
-            std::getline(config, title);
-            
-            config >> bounds.width >> bounds.height;
-            config >> bounds.width >> bounds.height;
-            config >> framerate;
-        }
-
-        config.close();
-        */
         fullscreen = false;
         setVideoMode();
     }
@@ -117,7 +101,6 @@
         }
     }
 
-    // SHOULD CHANGE TO INCLUDE ONLY WINDOW OPTIONS AND 
     void Game::UpdatePlayerEvents(){
 
         /* Calls the input handler to get user input as vector of messages 
