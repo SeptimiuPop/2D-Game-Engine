@@ -41,7 +41,6 @@
         */
         fullscreen = false;
         setVideoMode();
-        view.setSize(sf::Vector2f(320,180));
     }
 
     void Game::initBgMusic(){
@@ -49,7 +48,7 @@
             throw("Could not load Timberbrook.wav");
         
         music.play();
-        music.setVolume(30.f);
+        music.setVolume(5.f);
         music.setLoop(true);
         music.setPitch(1.f);
     }
@@ -62,6 +61,7 @@
         else{
             engine->_window->create(sf::VideoMode(960, 540),"Tale-of-a-Mouse", sf::Style::Default);
         }
+        engine->_window->setVerticalSyncEnabled(true);
     }
 
 
@@ -70,6 +70,7 @@
 
     void Game::Run(){
         while(engine->_window->isOpen()){ 
+            std::cout<<dt<<"\n";
             dt = dtClock.getElapsedTime().asSeconds();
             dtClock.restart();
 
@@ -87,6 +88,7 @@
 
         if(engine->game_state == "IN_GAME"){
             room.draw();
+            engine->_window->setView(engine->_window->getDefaultView());
         }
         else{
             menu.Draw();
@@ -101,17 +103,17 @@
     void Game::Update(){   
 
         engine->_inputs->handle_inputs();
+        UpdatePlayerEvents();
         
-        if(engine->game_state == "IN_GAME"){
-            UpdatePlayerEvents();
+        if(engine->game_state == "NEW_GAME"){
+            room.generateRoom();
+            engine->game_state = "IN_GAME";
+        }
+        else if(engine->game_state == "IN_GAME"){
+            room.update();
         }
         else{
-            std::string state = engine->game_state;
             menu.Update();
-
-            // if the game changed from some menu option to MAIN_MENU
-            if(engine->game_state != state && engine->game_state == "MAIN_MENU")
-                menu.Init();
         }
     }
 
@@ -126,10 +128,15 @@
         for(auto& action : inputs){
             // window actions
             if(action.message == "CLOSE") {
-                engine->game_state = "PAUSED";
-                menu.Init();
+                if(engine->game_state == "IN_GAME"){
+
+                    engine->game_state = "PAUSED";
+                    menu.Init();
+                }
+                else if(engine->game_state == "PAUSED")
+                    engine->game_state = "IN_GAME";
             }
-            if(action.message == "FULLSCREEN") setVideoMode();            
+            if(action.message == "FULLSCREEN") setVideoMode();   
         }
     }
 

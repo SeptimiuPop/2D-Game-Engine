@@ -42,7 +42,7 @@ void RenderComponent::initComponent(sf::Texture& texture, unsigned width, unsign
 void RenderComponent::update(Entity& player, sf::RenderWindow& window){
 
     counter++;
-    if(counter % 4 == 0){
+    if(counter % 15 == 0){
         counter = 0;
         if(player.velocity == sf::Vector2f(0,0) ||
             frame >= NUMBER_OF_FRAMES)
@@ -56,7 +56,7 @@ void RenderComponent::update(Entity& player, sf::RenderWindow& window){
     sprite.setTextureRect(textureBounds_);
 
     sprite.setPosition(player.x,player.y);
-    sprite.setScale(sf::Vector2f(5,5));
+    sprite.setScale(sf::Vector2f(1,1));
     
     window.draw(sprite);
 }

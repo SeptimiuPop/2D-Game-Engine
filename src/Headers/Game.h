@@ -10,15 +10,14 @@ class Game{
         //variables
         std::shared_ptr<Engine> engine;
 
-        sf::View view; 
-        bool fullscreen = true;
-
         Room room;
         GameMenu menu;
 
+        bool fullscreen = true;
+
+
         sf::Clock dtClock;
         float dt;
-        const sf::Time TIME_PER_FRAME = sf::seconds(1.f/60.f);
 
         sf::Music music;
 

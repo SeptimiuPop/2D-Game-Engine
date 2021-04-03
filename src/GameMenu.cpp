@@ -92,19 +92,21 @@
                 
                 if(buttons[i].getLabel() == "Play" &&
                    sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-                    engine->game_state = "IN_GAME";
+                    engine->game_state = "NEW_GAME";
                 
                 if(buttons[i].getLabel() == "Resume" &&
                    sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
                     engine->game_state = "IN_GAME";
                     
                 if(buttons[i].getLabel() == "Main Menu" &&
-                   sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+                   sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){
                     engine->game_state = "MAIN_MENU";
+                    Init();
+                   }
                                    
                 if(buttons[i].getLabel() == "New Game" &&
                    sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-                    engine->game_state = "IN_GAME";
+                    engine->game_state = "NEW_GAME";
             }
             else{
                 buttons[i].setBgColor(sf::Color::Blue);

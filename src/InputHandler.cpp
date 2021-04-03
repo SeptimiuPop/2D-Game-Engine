@@ -50,7 +50,6 @@
         Message mes;
 
         // Key pressed events
-        if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("CLOSE")))) {mes.setCheck("CLOSE", true);input.push_back(mes);}
         if(key.isKeyPressed(sf::Keyboard::Key(keyBinds.at("SLOW"))))  {mes.setCheck("SLOW", true); input.push_back(mes);}
         if(mouse.isButtonPressed(mouse.Right)) {mes.setCheck("DRAW", true); input.push_back(mes);}           
         
@@ -68,6 +67,7 @@
             if(sfEvent.type == sf::Event::KeyReleased){
                 // Resize will always be alt+enter so no keybinding set here
                 if(sfEvent.key.code == key.Enter && key.isKeyPressed(key.LAlt)) mes.setCheck("FULLSCREEN", true);  
+                if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("CLOSE"))) mes.setCheck("CLOSE", true); 
                 if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("SLOW")))  mes.setCheck("SLOW", false); 
                 if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("DASH")))  mes.setCheck("DASH", true); 
                 if(sfEvent.key.code == sf::Keyboard::Key(keyBinds.at("NEXT_ANIM")))  mes.setCheck("NEXT", false);

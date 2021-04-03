@@ -12,11 +12,13 @@ class Room{
         std::vector<std::vector<Component>> components;
         Entity player;
 
+        sf::View view;
+
         int height, width;
         int roomCount;
 
 
-        void initMap();
+        void initMap(std::string);
         void initPlayer();
     public:
     
@@ -26,7 +28,9 @@ class Room{
 
         void setEngine(std::shared_ptr<Engine>);
         void generateRoom();
+        void UpdateView();
 
+        void update();
         void draw();
 
 };
