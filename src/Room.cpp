@@ -74,10 +74,8 @@
 
 
     void Room::generateRoom(){
-        srand(time(0));
-        int roomChoice = random()%3;
         
-        switch (roomChoice)
+        switch (roomCount)
         {
         case 0:
             initMap("../config/Rooms/Room_2.ini");
@@ -93,6 +91,8 @@
         }
         player.x = width/2  * 16;
         player.y = height/2 * 16;
+
+        roomCount = (roomCount + 1) % 3;
     }
 
     void Room::update(){
