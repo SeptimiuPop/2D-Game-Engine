@@ -3,6 +3,7 @@
 #include "Headers/InputComponent.h"
 #include "Headers/PhysicsComponent.h"
 #include "Headers/RenderComponent.h"
+#include <cstdlib>
 
 
 
@@ -28,8 +29,8 @@
 
     void Room::initPlayer(){
         
-        InputComponent input;
-        PhysicsComponent physics;
+        InputComponent input(engine);
+        PhysicsComponent physics(&map);
         RenderComponent renderer;
         renderer.initComponent(engine->_assets->getTexture("pl"), 16, 32);
         player = Entity(input, physics, renderer);
@@ -39,7 +40,8 @@
         map.clear();
         
         int style, choice, tileX, tileY;
-        
+        int blocking;
+
         std::ifstream config(filename);
         if(config.is_open()){
             // get the size and style of the room
@@ -50,7 +52,7 @@
                 for(int j=0; j<height; j++){
                     
                     config >> choice;
-                    Tile tile(sf::Vector2f(i*16,j*16), true);
+                    Tile tile(sf::Vector2f(i*16,j*16));
                     tile.setTexture(engine->_assets->getTexture("tileset"));
 
                     tileX = choice/10*16;
@@ -64,8 +66,14 @@
                 // place the row on the map
                 map.push_back(row);
             }
-        }
 
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < height; j++) {
+                    config >> blocking;
+                    map[i][j].setBlocking(blocking);
+                }
+            }
+        }
         config.close();
     }
 
@@ -74,16 +82,14 @@
 
 
     void Room::generateRoom(){
-        srand(time(0));
-        int roomChoice = random()%3;
         
-        switch (roomChoice)
+        switch (roomCount)
         {
         case 0:
-            initMap("../config/Rooms/Room_2.ini");
+            initMap("../config/Rooms/Room_3.ini");
             break;
         case 1:
-            initMap("../config/Rooms/Room_3.ini");
+            initMap("../config/Rooms/Room_2.ini");
             break;
         case 2:
             initMap("../config/Rooms/Room_4.ini");
@@ -93,6 +99,8 @@
         }
         player.x = width/2  * 16;
         player.y = height/2 * 16;
+
+        roomCount = (roomCount + 1) % 3;
     }
 
     void Room::update(){
@@ -123,8 +131,8 @@
         // set the view position to be centered on the player
         // plus a small offset given by the mouse pozition
         sf::Vector2f view_bounds;
-        view_bounds.x = player.x + 16 + (cursor.x)/32;
-        view_bounds.y = player.y + 16 + (cursor.y)/16;
+        view_bounds.x = player.x + (cursor.x)/32;
+        view_bounds.y = player.y + (cursor.y)/16;
 
         view.setCenter(view_bounds);
 

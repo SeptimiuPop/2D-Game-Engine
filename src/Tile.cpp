@@ -1,8 +1,8 @@
 #include "Headers/Includes.h"
 #include "Headers/Tile.h"
 
-    Tile::Tile(sf::Vector2f position, bool blocked):
-        pos(position), isBlocked(blocked){
+    Tile::Tile(sf::Vector2f position):
+        pos(position){
             sprite.setPosition(pos);
         }
 

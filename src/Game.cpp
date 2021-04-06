@@ -32,7 +32,7 @@
             throw("Could not load Timberbrook.wav");
         
         music.play();
-        music.setVolume(5.f);
+        music.setVolume(10.f);
         music.setLoop(true);
         music.setPitch(1.f);
     }
@@ -54,7 +54,7 @@
 
     void Game::Run(){
         while(engine->_window->isOpen()){ 
-            std::cout<<dt<<"\n";
+            //std::cout<<dt<<"\n";
             dt = dtClock.getElapsedTime().asSeconds();
             dtClock.restart();
 

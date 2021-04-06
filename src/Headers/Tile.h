@@ -13,8 +13,16 @@ class Tile{
 
     public:
         Tile();
-        Tile(sf::Vector2f, bool);
+        Tile(sf::Vector2f);
         
+        bool checkBlocked() {
+            return isBlocked;
+        }
+
+        void setBlocking(bool blocking) {
+            isBlocked = blocking;
+        }
+
         void setTexture(sf::Texture&);
         void setTexturePos(sf::IntRect);        
     

@@ -4,7 +4,6 @@
 
 class GameMenu{
     
-
     private:
 
         std::shared_ptr<Engine> engine;

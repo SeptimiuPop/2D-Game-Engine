@@ -20,6 +20,7 @@ class Room{
 
         void initMap(std::string);
         void initPlayer();
+        void spawnEntities();
     public:
     
         Room();

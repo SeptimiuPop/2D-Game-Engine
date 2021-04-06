@@ -2,21 +2,18 @@
 #include "Headers/Entity.h"
 #include "Headers/InputComponent.h"
 
-    void InputComponent::update(Entity& player){
-        
-        player.velocity.x = 0;
-        player.velocity.y = 0;
+void InputComponent::update(Entity& player) {
 
-        // Apply user input to hero's velocity.
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-            player.velocity.x -= WALK_ACCELERATION;
+    std::vector<Message> inputs = engine->_inputs->getInputs();
 
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-            player.velocity.x += WALK_ACCELERATION;
-     
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-            player.velocity.y -= WALK_ACCELERATION;
+    player.velocity.x =0;
+    player.velocity.y =0;
 
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-            player.velocity.y += WALK_ACCELERATION;
+
+    for(auto& action : inputs){
+        if(action.message == "MOVE") {
+            player.velocity.x = action.dir.x;
+            player.velocity.y = action.dir.y;
+        }
     }
+}
