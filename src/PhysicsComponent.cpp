@@ -18,7 +18,6 @@ void PhysicsComponent::update(Entity& player) {
     col = tile_collision(player.x, newY);
     if(!col)
         player.y = newY;
-    
 }
 
 /* Collision detection based on game tiles
@@ -32,14 +31,18 @@ bool PhysicsComponent::tile_collision(float x, float y){
     int top_tile    = (y)/16;
     int bottom_tile = (y+8)/16;
 
+    int height = gameWorld->size()-1;
+    int width  = gameWorld->at(1).size()-1;
+
+
     if(left_tile < 0) left_tile = 0;
-    if(top_tile < 0) top_tile = 0;
-    if(right_tile > gameWorld->size()-1) right_tile = gameWorld->size()-1;
-    if(bottom_tile > gameWorld->at(1).size()-1) bottom_tile = gameWorld->at(1).size()-1;
+    if(top_tile < 0 ) top_tile  = 0;
+    if(right_tile > width ) right_tile  = width;
+    if(bottom_tile> height) bottom_tile = height;
 
     for(int i=left_tile; i<=right_tile; i++){
         for(int j=top_tile; j<=bottom_tile; j++){
-            if(gameWorld->at(i)[j].checkBlocked())
+            if(gameWorld->at(j)[i].checkBlocked())
                 return true;
         }
     }

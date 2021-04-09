@@ -23,7 +23,6 @@
     void Room::setEngine(std::shared_ptr<Engine> game_engine){
         engine = game_engine;
         initPlayer();
-        generateRoom();  
         view.setSize(sf::Vector2f(320,180));
     }
 
@@ -37,41 +36,50 @@
     }
 
     void Room::initMap(std::string filename){
-        map.clear();
-        
-        int style, choice, tileX, tileY;
-        int blocking;
 
         std::ifstream config(filename);
+        std::string label;
+        int tileset_size, choice, tileX, tileY;
+        char cma;
+
+        map.clear();
+
         if(config.is_open()){
             // get the size and style of the room
             config >> width >> height;
-            config >> style;
-            for(int i=0; i<width; i++){
-                std::vector<Tile> row;
-                for(int j=0; j<height; j++){
-                    
-                    config >> choice;
-                    Tile tile(sf::Vector2f(i*16,j*16));
+            config >> tileset_size;
+
+            map.resize(height);
+            for(int i=0; i<height; i++){
+                map[i].resize(width);
+                for(int j=0; j<width; j++){
+                    Tile tile(sf::Vector2f(j*16,i*16));
                     tile.setTexture(engine->_assets->getTexture("tileset"));
-
-                    tileX = choice/10*16;
-                    tileY = choice%10*16 + style*4*16; 
-
-                    tile.setTexturePos(sf::IntRect(tileX, tileY,16,16));
-                    
-                    //place the tile in the row map 
-                    row.push_back(tile);
+                    map[i][j] = tile;       
                 }
-                // place the row on the map
-                map.push_back(row);
             }
 
-            for (int i = 0; i < width; i++) {
-                for (int j = 0; j < height; j++) {
-                    config >> blocking;
-                    map[i][j].setBlocking(blocking);
+
+            while(label != "col"){
+                config>>label;
+
+                for(int i=0; i<height; i++){
+                    for(int j=0; j<width; j++){
+                
+                        config >> choice;
+                        config >> cma;
+
+                        if(label == "layer"){
+                            choice --;
+                            tileX = choice%tileset_size*16; 
+                            tileY = choice/tileset_size*16;
+                            map[i][j].setTexturePos(sf::IntRect(tileX, tileY,16,16));   
+                        }
+                        else     
+                            map[i][j].setBlocking(choice);       
+                    }
                 }
+
             }
         }
         config.close();
@@ -86,21 +94,25 @@
         switch (roomCount)
         {
         case 0:
-            initMap("../config/Rooms/Room_3.ini");
+            initMap("../config/Rooms/Room_2.ini");
             break;
         case 1:
-            initMap("../config/Rooms/Room_2.ini");
+            initMap("../config/Rooms/Room_3.ini");
             break;
         case 2:
             initMap("../config/Rooms/Room_4.ini");
             break;
+        case 3:
+            initMap("../config/Rooms/Room_5.ini");
+            break;
         default:
             break;
         }
+
         player.x = width/2  * 16;
         player.y = height/2 * 16;
 
-        roomCount = (roomCount + 1) % 3;
+        roomCount = (roomCount + 1) % 4;
     }
 
     void Room::update(){
@@ -112,8 +124,8 @@
         engine->_window->setView(view);
 
         // on each tile of the map do:
-        for(int i=0; i<width; i++){
-            for(int j=0; j<height; j++){
+        for(int i=0; i<height; i++){
+            for(int j=0; j<width; j++){
                 map[i][j].draw(*engine->_window);
             }
         }
