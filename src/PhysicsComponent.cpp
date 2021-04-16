@@ -2,12 +2,12 @@
 #include "Headers/Entity.h"
 #include "Headers/PhysicsComponent.h"
 
-void PhysicsComponent::update(Entity& player) {
+void PhysicsComponent::update(Entity& player, const float dt) {
 
     
     float newX, newY;
-    newX = player.x + player.velocity.x * 1.5; 
-    newY = player.y + player.velocity.y * 1.5;
+    newX = player.x + player.velocity.x * 100 * dt; 
+    newY = player.y + player.velocity.y * 100 * dt;
 
     bool col;
 

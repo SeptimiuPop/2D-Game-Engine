@@ -91,22 +91,34 @@
                     engine->_window->close();
                 
                 if(buttons[i].getLabel() == "Play" &&
-                   sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+                   sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){
                     engine->game_state = "NEW_GAME";
+                    engine->_audio->Pause(0);
+                    engine->_audio->Play(1);
+                   }
                 
                 if(buttons[i].getLabel() == "Resume" &&
-                   sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+                   sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){
                     engine->game_state = "IN_GAME";
+                    engine->_audio->Pause(0);
+                    engine->_audio->Play(1);
+                   }
                     
                 if(buttons[i].getLabel() == "Main Menu" &&
                    sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){
                     engine->game_state = "MAIN_MENU";
+                    engine->_audio->Stop(0);
+                    engine->_audio->Stop(1);
+                    engine->_audio->Play(0);
                     Init();
                    }
                                    
                 if(buttons[i].getLabel() == "New Game" &&
-                   sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+                   sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){
                     engine->game_state = "NEW_GAME";
+                    engine->_audio->Pause(0);
+                    engine->_audio->Play(1);
+                   }
             }
             else{
                 buttons[i].setBgColor(sf::Color::Blue);

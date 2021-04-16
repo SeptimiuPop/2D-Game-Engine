@@ -7,6 +7,7 @@ class Entity{
 
     private:
 
+        // std::unique_ptr<AIComponent> ai_; 
         std::unique_ptr<InputComponent> input_; 
         std::unique_ptr<PhysicsComponent> physics_; 
         std::unique_ptr<RenderComponent> renderer_; 

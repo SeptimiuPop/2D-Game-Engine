@@ -28,13 +28,14 @@
     }
 
     void Game::initBgMusic(){
-        if (!music.openFromFile("../assets/Audio/Timberbrook.wav"))
-            throw("Could not load Timberbrook.wav");
-        
-        music.play();
-        music.setVolume(10.f);
-        music.setLoop(true);
-        music.setPitch(1.f);
+        // menu music
+        std::string filename = engine->_assets->getMusic("main_menu");
+        engine->_audio->LoadChannel(filename);
+        // game music 
+        filename = engine->_assets->getMusic("in_game");
+        engine->_audio->LoadChannel(filename);
+
+        engine->_audio->Play(0);
     }
 
     void Game::setVideoMode(){
@@ -71,7 +72,7 @@
         engine->_window->clear();
 
         if(engine->game_state == "IN_GAME"){
-            room.draw();
+            room.Draw(dt);
             engine->_window->setView(engine->_window->getDefaultView());
         }
         else{
@@ -94,7 +95,7 @@
             engine->game_state = "IN_GAME";
         }
         else if(engine->game_state == "IN_GAME"){
-            room.update();
+            room.Update(dt);
         }
         else{
             menu.Update();
@@ -115,9 +116,14 @@
 
                     engine->game_state = "PAUSED";
                     menu.Init();
+                    engine->_audio->Pause(1);
+                    engine->_audio->Play(0);
                 }
-                else if(engine->game_state == "PAUSED")
+                else if(engine->game_state == "PAUSED"){
                     engine->game_state = "IN_GAME";
+                    engine->_audio->Pause(0);
+                    engine->_audio->Play(1);
+                }
             }
             if(action.message == "FULLSCREEN") setVideoMode();   
         }

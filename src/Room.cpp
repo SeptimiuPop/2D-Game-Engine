@@ -1,9 +1,9 @@
 #include "Headers/Includes.h"
 #include "Headers/Room.h"
+#include "Headers/AIComponent.h"
 #include "Headers/InputComponent.h"
 #include "Headers/PhysicsComponent.h"
 #include "Headers/RenderComponent.h"
-#include <cstdlib>
 
 
 
@@ -94,15 +94,18 @@
         switch (roomCount)
         {
         case 0:
-            initMap("../config/Rooms/Room_2.ini");
+            initMap("../config/Rooms/Room_1.ini");
             break;
         case 1:
-            initMap("../config/Rooms/Room_3.ini");
+            initMap("../config/Rooms/Room_2.ini");
             break;
         case 2:
-            initMap("../config/Rooms/Room_4.ini");
+            initMap("../config/Rooms/Room_3.ini");
             break;
         case 3:
+            initMap("../config/Rooms/Room_4.ini");
+            break;
+        case 4:
             initMap("../config/Rooms/Room_5.ini");
             break;
         default:
@@ -112,15 +115,15 @@
         player.x = width/2  * 16;
         player.y = height/2 * 16;
 
-        roomCount = (roomCount + 1) % 4;
+        roomCount = (roomCount + 1) % 5;
     }
 
-    void Room::update(){
+    void Room::Update(const float dt){
         UpdateView();
+
     }
 
-    void Room::draw(){
-        
+    void Room::Draw(const float dt){
         engine->_window->setView(view);
 
         // on each tile of the map do:
@@ -129,7 +132,7 @@
                 map[i][j].draw(*engine->_window);
             }
         }
-        player.update(20, engine->_window);
+        player.update(dt, engine->_window);
     }
 
     void Room::UpdateView(){

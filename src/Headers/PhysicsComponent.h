@@ -1,10 +1,9 @@
 #pragma once
-#include "Component.h"
 #include "Tile.h"
 
 class Entity;
 
-class PhysicsComponent : public Component
+class PhysicsComponent
 {
 private:
     const float WALKING_DECELERATION = 1.f;
@@ -20,6 +19,6 @@ public:
     PhysicsComponent(std::vector<std::vector<Tile>>* world):
         gameWorld(world){}
 
-    void update(Entity& player);
+    void update(Entity& player, const float dt);
 
 };

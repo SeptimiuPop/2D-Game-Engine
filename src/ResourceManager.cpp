@@ -24,6 +24,10 @@
         // sound
         loadSound("walk_stone","../assets/Audio/player/boot_stone_01.wav");
         loadSound("walk_carpet","../assets/Audio/player/boot_carpet_01.wav");
+
+        // music 
+        loadMusic("main_menu","../assets/Audio/2019-06-14_-_Warm_Light_-_David_Fesliyan.wav");
+        loadMusic("in_game","../assets/Audio/Timberbrook.wav");
     }
 
 
@@ -66,14 +70,10 @@
     }
 
 
-    /* LOAD AND GET MUSIC
+    /* LOAD AND GET MUSIC*/
     void ResourceManager::loadMusic(std::string name, std::string fileName){
-        sf::Music song;
-        if(song.openFromFile(fileName)){
-            music[name] = song;
-        }
+        music[name] = fileName;
     }
-    sf::Music &ResourceManager::getMusic(std::string name){
+    std::string &ResourceManager::getMusic(std::string name){
         return music.at(name);
     }
-    */

@@ -18,8 +18,6 @@ class Game{
         sf::Clock dtClock;
         float dt;
 
-        sf::Music music;
-
 
         //initialization functions
         void initWindow();

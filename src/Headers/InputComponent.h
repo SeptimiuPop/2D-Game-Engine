@@ -1,10 +1,9 @@
 #pragma once
-#include "Component.h"
 #include "Engine.h"
 
 class Entity;
 
-class InputComponent : public Component
+class InputComponent
 {
 private:
     const float WALK_ACCELERATION = 1.f;

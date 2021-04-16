@@ -8,8 +8,6 @@ class Room{
     
         std::shared_ptr<Engine> engine;
         std::vector<std::vector<Tile>> map;
-        // std::vector<Entity> entities;
-        std::vector<std::vector<Component>> components;
         Entity player;
 
         sf::View view;
@@ -31,8 +29,8 @@ class Room{
         void generateRoom();
         void UpdateView();
 
-        void update();
-        void draw();
+        void Update(const float dt);
+        void Draw(const float dt);
 
 };
 

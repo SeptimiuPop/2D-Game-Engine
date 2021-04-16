@@ -1,9 +1,8 @@
 #pragma once
-#include "Component.h"
 
 class Entity;
 
-class RenderComponent : public Component
+class RenderComponent
 {
 
 private:
