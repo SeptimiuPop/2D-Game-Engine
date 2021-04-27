@@ -7,7 +7,7 @@
         engine(std::make_shared<Engine>()){
         engine->game_state="MAIN_MENU";
 
-        room.setEngine(engine);        
+        scene.setEngine(engine);        
         menu.setEngine(engine);        
         menu.Init();
 
@@ -72,7 +72,7 @@
         engine->_window->clear();
 
         if(engine->game_state == "IN_GAME"){
-            room.Draw(dt);
+            scene.Draw(dt);
             engine->_window->setView(engine->_window->getDefaultView());
         }
         else{
@@ -91,11 +91,11 @@
         UpdatePlayerEvents();
         
         if(engine->game_state == "NEW_GAME"){
-            room.generateRoom();
+            scene.generateRoom();
             engine->game_state = "IN_GAME";
         }
         else if(engine->game_state == "IN_GAME"){
-            room.Update(dt);
+            scene.Update(dt);
         }
         else{
             menu.Update();
@@ -117,11 +117,9 @@
                     engine->game_state = "PAUSED";
                     menu.Init();
                     engine->_audio->Pause(1);
-                    engine->_audio->Play(0);
                 }
                 else if(engine->game_state == "PAUSED"){
                     engine->game_state = "IN_GAME";
-                    engine->_audio->Pause(0);
                     engine->_audio->Play(1);
                 }
             }

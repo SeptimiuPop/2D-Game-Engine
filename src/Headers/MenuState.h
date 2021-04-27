@@ -2,7 +2,7 @@
 #include "Engine.h"
 #include "Button.h"
 
-class GameMenu{
+class MenuState{
     
     private:
 
@@ -21,7 +21,7 @@ class GameMenu{
 
     public:
 
-        GameMenu();
+        MenuState();
         
         void setEngine(std::shared_ptr<Engine>);
         void Init();

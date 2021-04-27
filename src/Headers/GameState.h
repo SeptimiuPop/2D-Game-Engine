@@ -3,7 +3,7 @@
 #include "Entity.h"
 #include "Tile.h"
 
-class Room{
+class GameState{
     private:
     
         std::shared_ptr<Engine> engine;
@@ -21,9 +21,9 @@ class Room{
         void spawnEntities();
     public:
     
-        Room();
+        GameState();
 
-        ~Room();
+        ~GameState();
 
         void setEngine(std::shared_ptr<Engine>);
         void generateRoom();

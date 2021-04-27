@@ -1,5 +1,5 @@
 #include "Headers/Includes.h"
-#include "Headers/Room.h"
+#include "Headers/GameState.h"
 #include "Headers/AIComponent.h"
 #include "Headers/InputComponent.h"
 #include "Headers/PhysicsComponent.h"
@@ -11,31 +11,31 @@
 
 
 
-    Room::Room(): roomCount(0){
+    GameState::GameState(): roomCount(0){
     }
 
 
-    Room::~Room(){}
+    GameState::~GameState(){}
 
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- PRIVATE FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-    void Room::setEngine(std::shared_ptr<Engine> game_engine){
+    void GameState::setEngine(std::shared_ptr<Engine> game_engine){
         engine = game_engine;
         initPlayer();
         view.setSize(sf::Vector2f(320,180));
     }
 
-    void Room::initPlayer(){
+    void GameState::initPlayer(){
         
         InputComponent input(engine);
         PhysicsComponent physics(&map);
         RenderComponent renderer;
-        renderer.initComponent(engine->_assets->getTexture("pl"), 16, 32);
+        renderer.initComponent(engine->_assets->getTexture("player"), 16, 32);
         player = Entity(input, physics, renderer);
     }
 
-    void Room::initMap(std::string filename){
+    void GameState::initMap(std::string filename){
 
         std::ifstream config(filename);
         std::string label;
@@ -89,15 +89,15 @@
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- PUBLIC  FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
 
-    void Room::generateRoom(){
+    void GameState::generateRoom(){
         
         switch (roomCount)
         {
         case 0:
-            initMap("../config/Rooms/Room_1.ini");
+            initMap("../config/Rooms/Room_2.ini");
             break;
         case 1:
-            initMap("../config/Rooms/Room_2.ini");
+            initMap("../config/Rooms/Room_1.ini");
             break;
         case 2:
             initMap("../config/Rooms/Room_3.ini");
@@ -118,12 +118,12 @@
         roomCount = (roomCount + 1) % 5;
     }
 
-    void Room::Update(const float dt){
+    void GameState::Update(const float dt){
         UpdateView();
 
     }
 
-    void Room::Draw(const float dt){
+    void GameState::Draw(const float dt){
         engine->_window->setView(view);
 
         // on each tile of the map do:
@@ -135,7 +135,7 @@
         player.update(dt, engine->_window);
     }
 
-    void Room::UpdateView(){
+    void GameState::UpdateView(){
         /* Sets the view of the window around the player */
         sf::Vector2i cursor = sf::Mouse::getPosition(*engine->_window);
 

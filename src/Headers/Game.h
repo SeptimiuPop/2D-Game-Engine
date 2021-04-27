@@ -1,7 +1,7 @@
 #pragma once
 #include "Engine.h"
-#include "Room.h"
-#include "GameMenu.h"
+#include "GameState.h"
+#include "MenuState.h"
 
 class Game{
 
@@ -10,8 +10,8 @@ class Game{
         //variables
         std::shared_ptr<Engine> engine;
 
-        Room room;
-        GameMenu menu;
+        GameState scene;
+        MenuState menu;
 
         bool fullscreen = true;
 

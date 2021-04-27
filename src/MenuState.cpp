@@ -1,20 +1,20 @@
 #include "Headers/Includes.h"
-#include "Headers/GameMenu.h"
+#include "Headers/MenuState.h"
 
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- CONSTRUCTOR / DESTRUCTOR -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-    GameMenu::GameMenu(){}
+    MenuState::MenuState(){}
 
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- PRIVATE FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-    void GameMenu::setEngine(std::shared_ptr<Engine> game_engine){
+    void MenuState::setEngine(std::shared_ptr<Engine> game_engine){
         engine = game_engine;
     }
 
 
-    void GameMenu::InitMessage(){
+    void MenuState::InitMessage(){
         menu_message.setFont(engine->_assets->getFont("main_menu"));
         if(engine->game_state == "MAIN_MENU")
             menu_message.setString("Tale Of A Mouse");
@@ -25,7 +25,7 @@
         menu_message.setPosition(600,50);
     }
 
-    void GameMenu::InitActions(){
+    void MenuState::InitActions(){
         
 
         if(!actions.empty())
@@ -50,7 +50,7 @@
         }
     }
 
-    void GameMenu::InitButtons(){
+    void MenuState::InitButtons(){
 
         if(!buttons.empty())
             buttons.clear();
@@ -67,13 +67,13 @@
 
     /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- PUBLIC  FUNCTIONS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-    void GameMenu::Init(){
+    void MenuState::Init(){
         InitMessage();
         InitActions();
         InitButtons();
     }
 
-    void GameMenu::Update(){
+    void MenuState::Update(){
         
         sf::Vector2i mouse = sf::Mouse::getPosition(*engine->_window);
         bool ok = false;
@@ -94,13 +94,13 @@
                    sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){
                     engine->game_state = "NEW_GAME";
                     engine->_audio->Pause(0);
+                    engine->_audio->Stop(1);
                     engine->_audio->Play(1);
                    }
                 
                 if(buttons[i].getLabel() == "Resume" &&
                    sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){
                     engine->game_state = "IN_GAME";
-                    engine->_audio->Pause(0);
                     engine->_audio->Play(1);
                    }
                     
@@ -116,7 +116,7 @@
                 if(buttons[i].getLabel() == "New Game" &&
                    sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){
                     engine->game_state = "NEW_GAME";
-                    engine->_audio->Pause(0);
+                    engine->_audio->Stop(1);
                     engine->_audio->Play(1);
                    }
             }
@@ -127,7 +127,7 @@
     }
 
 
-    void GameMenu::Draw(){
+    void MenuState::Draw(){
         engine->_window->draw(menu_message);
 
         for(auto& b : buttons){

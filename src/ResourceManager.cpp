@@ -13,8 +13,8 @@
 
     void ResourceManager::initAssets(){
         // textures
-        loadTexture("mo","../assets/Textures/Ground_Monk.png");
-        loadTexture("pl","../assets/Textures/Sprites.png");
+        loadTexture("monk","../assets/Textures/Ground_Monk.png");
+        loadTexture("player","../assets/Textures/Sprites.png");
         loadTexture("ui","../assets/Textures/ui_health.png");
         loadTexture("tileset","../assets/Textures/Tileset.png");
 
