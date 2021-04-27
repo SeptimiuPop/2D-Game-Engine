@@ -41,7 +41,7 @@
         label.setFillColor(color);
     }
 
-    std::string Button::getLabel(){
+    sf::String Button::getLabel(){
         return label.getString();
     }
 

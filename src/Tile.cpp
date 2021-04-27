@@ -1,14 +1,22 @@
 #include "Headers/Includes.h"
 #include "Headers/Tile.h"
 
-    Tile::Tile(sf::Vector2i position, bool blocked):
-        pos(position), isBlocked(blocked){}
+    Tile::Tile(){}
+    
+    Tile::Tile(sf::Vector2f position):
+        pos(position){
+            sprite.setPosition(pos);
+        }
 
-
-    void Tile::setTexturePos(sf::IntRect texturePos){
-        layers.push_back(texturePos);
+    void Tile::setTexture(sf::Texture& texture){
+        sprite.setTexture(texture);
     }
 
-    sf::IntRect& Tile::getTexturePos(){
-        return layers[0];
+    void Tile::setTexturePos(sf::IntRect texturePos){
+        texture_pos = texturePos;
+        sprite.setTextureRect(texture_pos);
+    }
+
+    void Tile::draw(sf::RenderWindow& window){
+        window.draw(sprite);
     }

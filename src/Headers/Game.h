@@ -1,8 +1,7 @@
 #pragma once
 #include "Engine.h"
-#include "Entity.h"
-#include "Room.h"
-#include "GameMenu.h"
+#include "GameState.h"
+#include "MenuState.h"
 
 class Game{
 
@@ -11,30 +10,18 @@ class Game{
         //variables
         std::shared_ptr<Engine> engine;
 
+        GameState scene;
+        MenuState menu;
 
-
-        sf::View view; 
         bool fullscreen = true;
-
-        Room room;
-        GameMenu menu;
-
-        std::vector<Entity> ui;
-        std::vector<Entity> entities;
-        
 
         sf::Clock dtClock;
         float dt;
-        const sf::Time TIME_PER_FRAME = sf::seconds(1.f/60.f);
-
-        sf::Music music;
 
 
         //initialization functions
         void initWindow();
         void initBgMusic();
-        void initEntities();
-        void initUIElements();
         void setVideoMode();
 
     public:
@@ -45,7 +32,6 @@ class Game{
 
         //update functions
         void UpdatePlayerEvents();
-        void UpdateView();
         void Update();
 
         void Render();

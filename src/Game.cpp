@@ -6,14 +6,13 @@
     Game::Game():
         engine(std::make_shared<Engine>()){
         engine->game_state="MAIN_MENU";
-        
-        menu = GameMenu(engine);
+
+        scene.setEngine(engine);        
+        menu.setEngine(engine);        
         menu.Init();
 
         initWindow();
         initBgMusic();
-        initEntities();
-        initUIElements();
     }
 
     Game::~Game(){}
@@ -24,60 +23,19 @@
 
     //initialization
     void Game::initWindow(){
-        /*
-        std::ifstream config("../config/init_window.txt");
-        std::string title = "None";
-        sf::VideoMode bounds(1920, 1080);
-        int framerate = 120;
-
-        if(config.is_open()){
-            std::getline(config, title);
-            
-            config >> bounds.width >> bounds.height;
-            config >> bounds.width >> bounds.height;
-            config >> framerate;
-        }
-
-        config.close();
-        */
         fullscreen = false;
         setVideoMode();
-        view.setSize(sf::Vector2f(320,180));
     }
 
     void Game::initBgMusic(){
-        if (!music.openFromFile("../assets/Audio/Timberbrook.wav"))
-            std::cout<<"\n\nSo silent..\n\n";
+        // menu music
+        std::string filename = engine->_assets->getMusic("main_menu");
+        engine->_audio->LoadChannel(filename);
+        // game music 
+        filename = engine->_assets->getMusic("in_game");
+        engine->_audio->LoadChannel(filename);
 
-        music.play();
-        music.setVolume(100.f);
-        music.setLoop(true);
-        music.setPitch(1.f);
-    }
-
-    void Game::initEntities(){
-        
-        room.setEngine(engine);
-        
-        for(int i=0; i<3; i++){
-            Entity en(i*200,0);
-            entities.push_back(en);
-        }
-
-        // entities[0].initSprite(engine->_assets->getTexture("bg"), 2, 1920, 1088);
-        entities[1].initSprite(engine->_assets->getTexture("mo"), 1, 100, 64);
-        entities[2].initSprite(engine->_assets->getTexture("pl"),1,32,32);
-        
-        // sound
-        entities[2].initSound(engine->_assets->getSound("walk_stone"), 60.f, 1.f);
-    }
-
-    void Game::initUIElements(){
-        
-        Entity ui_health(20,20);
-        ui.push_back(ui_health);
-        
-        ui[0].initSprite(engine->_assets->getTexture("ui"),0.2,900,300);
+        engine->_audio->Play(0);
     }
 
     void Game::setVideoMode(){
@@ -88,6 +46,7 @@
         else{
             engine->_window->create(sf::VideoMode(960, 540),"Tale-of-a-Mouse", sf::Style::Default);
         }
+        engine->_window->setVerticalSyncEnabled(true);
     }
 
 
@@ -96,6 +55,7 @@
 
     void Game::Run(){
         while(engine->_window->isOpen()){ 
+            //std::cout<<dt<<"\n";
             dt = dtClock.getElapsedTime().asSeconds();
             dtClock.restart();
 
@@ -112,17 +72,8 @@
         engine->_window->clear();
 
         if(engine->game_state == "IN_GAME"){
-            // draw game elements in view
-            engine->_window->setView(view);
-            room.draw();
-            for(auto& en:entities) 
-                en.draw(engine->_window);
-            
-
-            // draw UI elements
+            scene.Draw(dt);
             engine->_window->setView(engine->_window->getDefaultView());
-            for(auto& en:ui) 
-                en.draw(engine->_window);
         }
         else{
             menu.Draw();
@@ -135,74 +86,46 @@
 
 
     void Game::Update(){   
-        if(engine->game_state == "IN_GAME"){
-            UpdatePlayerEvents();
-            UpdateView();
+
+        engine->_inputs->handle_inputs();
+        UpdatePlayerEvents();
+        
+        if(engine->game_state == "NEW_GAME"){
+            scene.generateRoom();
+            engine->game_state = "IN_GAME";
+        }
+        else if(engine->game_state == "IN_GAME"){
+            scene.Update(dt);
         }
         else{
-            std::string state = engine->game_state;
             menu.Update();
-            if(engine->game_state != state && engine->game_state == "MAIN_MENU")
-                menu.Init();
         }
     }
-
 
     void Game::UpdatePlayerEvents(){
 
         /* Calls the input handler to get user input as vector of messages 
         * and iterates the list to take action */
 
-        bool slowed = false;
-        bool draw = false;
-        bool dash = false;
-        sf::Vector2i move_direction;
-
-        std::vector<Message> inputs = engine->_inputs->handle_input();
+        std::vector<Message> inputs = engine->_inputs->getInputs();
 
         for(auto& action : inputs){
             // window actions
             if(action.message == "CLOSE") {
-                engine->game_state = "PAUSED";
-                menu.Init();
+                if(engine->game_state == "IN_GAME"){
+
+                    engine->game_state = "PAUSED";
+                    menu.Init();
+                    engine->_audio->Pause(1);
+                }
+                else if(engine->game_state == "PAUSED"){
+                    engine->game_state = "IN_GAME";
+                    engine->_audio->Play(1);
+                }
             }
-            if(action.message == "FULLSCREEN") setVideoMode();
-            
-            // mock animation actions
-            if(action.message == "DRAW") draw = action.check;
-            if(action.message == "NEXT") entities[1].next_anim();
-            if(action.message == "PREV") entities[1].prev_anim();
-            if(action.message == "RESET") entities[1].reset_anim();
-
-            if(action.message == "NR") room.generateRoom();
-            
-            // movement actions
-            if(action.message == "DASH") dash = action.check;
-            if(action.message == "SLOW") slowed = action.check;
-            if(action.message == "MOVE") move_direction = action.dir;
+            if(action.message == "FULLSCREEN") setVideoMode();   
         }
-
-        entities[1].animate(dt, draw);
-        entities[2].update(dt, move_direction, slowed, dash, engine->_window);
-
     }
 
-    void Game::UpdateView(){
-        /* Sets the view of the window around the player */
-        sf::Vector2i cursor = sf::Mouse::getPosition(*engine->_window);
-        sf::Vector2f player = entities[2].getPozition();
-
-        // center the mouse position
-        cursor.x -= engine->_window->getSize().x/2;
-        cursor.y -= engine->_window->getSize().y/2;
-        
-        // set the view position to be centered on the player
-        // plus a small offset given by the mouse pozition
-        sf::Vector2f view_bounds;
-        view_bounds.x = player.x + (cursor.x)/32;
-        view_bounds.y = player.y + (cursor.y)/16;
-
-        view.setCenter(view_bounds);
-    }
 
 
