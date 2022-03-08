@@ -33,6 +33,20 @@ NEW_ROOM    | T
 
 ## Setup work
 
+### Install SFML
+
+SFML can be installed dirrectly from the website by following the instructions or cloned from the [repository](https://github.com/SeptimiuPop/2D-Game-Engine/tree/main/External/SFML).
+
+If the latter (cloning) is chosen, all directories except `include` and `lib` in the SFML folder can be removed. In order to compile the code properly the `build.sh` file should have the following changes :
+
+```g++ -c ../src/*.cpp -I <SFML/include Path>
+g++ *.o -o main.exe -L <SFML/lib Path> -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system # to link.
+```
+
+Where `<SFML/include Path>` and `<SFML/lib Path>` are replaced by the path of the include and lib directories in the cloned SFML folder
+
+### Prepare the commands
+
 From the terminal use the following commands to give users permission to run the scripts. Replace File-name with the name of the shell script you want to give permission to :
 
 ```properties
@@ -49,9 +63,16 @@ In order to successfully build and run the application you must create a folder 
 mkdir bin
 ```  
 
-### Launch the Application
+### Build the application
+From the terminal use the following command to compile the code in the bin folder created previously, and run it
 
-From the terminal use the following command to build and launch the application
+```properties
+./build.sh
+```  
+
+### Launch the application
+
+From the terminal use the following command to launch the already built application
 
 ```properties
 ./run.sh
