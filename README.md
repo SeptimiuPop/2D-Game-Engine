@@ -39,11 +39,13 @@ SFML can be installed dirrectly from the website by following the instructions o
 
 If the latter (cloning) is chosen, all directories except `include` and `lib` in the SFML folder can be removed. In order to compile the code properly the `build.sh` file should have the following changes :
 
-```g++ -c ../src/*.cpp -I <SFML/include Path>
+```
+g++ -c ../src/*.cpp -I <SFML/include Path>
 g++ *.o -o main.exe -L <SFML/lib Path> -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system # to link.
 ```
 
 Where `<SFML/include Path>` and `<SFML/lib Path>` are replaced by the path of the include and lib directories in the cloned SFML folder
+
 
 ### Prepare the commands
 
