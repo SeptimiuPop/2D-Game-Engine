@@ -6,7 +6,7 @@
     Game::Game():
         engine(std::make_shared<Engine>()){
         engine->game_state="MAIN_MENU";
-
+        
         scene.setEngine(engine);        
         menu.setEngine(engine);        
         menu.Init();
@@ -86,7 +86,7 @@
 
 
     void Game::Update(){   
-
+        
         engine->_inputs->handle_inputs();
         UpdatePlayerEvents();
         

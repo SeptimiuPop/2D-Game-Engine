@@ -52,7 +52,8 @@ void RenderComponent::update(Entity& player, sf::RenderWindow& window) {
     }
 
     textureBounds_.left = frame * textureBounds_.width;
-    setFacing(window);
+    // setFacing(window);
+    setDefaulFacing(player);
     sprite.setTextureRect(textureBounds_);
 
     sprite.setPosition(player.x-8, player.y-24);

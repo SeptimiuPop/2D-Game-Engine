@@ -27,13 +27,9 @@
     }
 
     void GameState::initPlayer(){
-        
-        InputComponent input(engine);
-        PhysicsComponent physics(&map);
-        RenderComponent renderer;
-        renderer.initComponent(engine->_assets->getTexture("player"), 16, 32);
-        player = Entity(input, physics, renderer);
+        Entity player(engine, &map);
     }
+
 
     void GameState::initMap(std::string filename){
 
@@ -132,6 +128,7 @@
                 map[i][j].draw(*engine->_window);
             }
         }
+
         player.update(dt, engine->_window);
     }
 

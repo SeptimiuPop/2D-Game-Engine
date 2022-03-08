@@ -1,9 +1,10 @@
 #pragma once
 #include "Tile.h"
+#include "Component.h"
 
 class Entity;
 
-class PhysicsComponent
+class PhysicsComponent : public Component
 {
 private:
     const float WALKING_DECELERATION = 1.f;
@@ -15,9 +16,11 @@ private:
     bool tile_collision(float x, float y);
 
 public:
+    PhysicsComponent(){}
 
-    PhysicsComponent(std::vector<std::vector<Tile>>* world):
-        gameWorld(world){}
+    void Init(std::vector<std::vector<Tile>>* world){
+        gameWorld = world;
+    }
 
     void update(Entity& player, const float dt);
 

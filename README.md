@@ -12,7 +12,26 @@ The software requirements to run must be the following :
 - C++ 11 or above
 - SFML library installed
 
-### Setup work
+## Controls
+
+The controlls can be edited from the config/key_binds.ini
+
+Key Binds | Actions 
+------------ | ------------- 
+Toggle menu | Escape  
+MOVE_LEFT   | A
+MOVE_RIGHT  | D
+MOVE_UP     | W
+MOVE_DOWN   | S
+DASH        | Space
+SLOW        | LShift
+NEXT_ANIM   | E
+PREV_ANIM   | Q
+RESET_ANIM  | R
+NEW_ROOM    | T
+
+
+## Setup work
 
 From the terminal use the following commands to give users permission to run the scripts. Replace File-name with the name of the shell script you want to give permission to :
 

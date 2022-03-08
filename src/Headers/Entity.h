@@ -1,4 +1,5 @@
 #pragma once
+#include "AIComponent.h"
 #include "InputComponent.h"
 #include "PhysicsComponent.h"
 #include "RenderComponent.h"
@@ -7,10 +8,9 @@ class Entity{
 
     private:
 
-        // std::unique_ptr<AIComponent> ai_; 
-        std::unique_ptr<InputComponent> input_; 
-        std::unique_ptr<PhysicsComponent> physics_; 
-        std::unique_ptr<RenderComponent> renderer_; 
+        InputComponent input_; 
+        PhysicsComponent physics_; 
+        RenderComponent renderer_; 
 
 
     public:
@@ -24,7 +24,7 @@ class Entity{
             velocity(0,0),
             x(0), y(0) {}
 
-        Entity(InputComponent, PhysicsComponent, RenderComponent);        
+        Entity(std::shared_ptr<Engine> engine, std::vector<std::vector<Tile>>* map);   
 
         void update(const float dt, std::shared_ptr<sf::RenderWindow> window);
 
