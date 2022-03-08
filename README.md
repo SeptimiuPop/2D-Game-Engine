@@ -46,6 +46,7 @@ g++ *.o -o main.exe -L <SFML/lib Path> -lsfml-graphics -lsfml-window -lsfml-audi
 
 Where `<SFML/include Path>` and `<SFML/lib Path>` are replaced by the path of the include and lib directories in the cloned SFML folder
 
+---
 
 ### Prepare the commands
 
@@ -64,6 +65,8 @@ In order to successfully build and run the application you must create a folder 
 ```properties
 mkdir bin
 ```  
+
+---
 
 ### Build the application
 From the terminal use the following command to compile the code in the bin folder created previously, and run it
