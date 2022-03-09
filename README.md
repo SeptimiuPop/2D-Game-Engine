@@ -60,7 +60,7 @@ Example :
 ```properties
 sudo chmod u+x run.sh
 ```  
-In order to successfully build and run the application you must create a folder named bin where the build files will go. To do this use the following command from the terminal :
+In order to successfully build and run the application you must create a folder named bin where the build files will go. To do this use the following command from the terminal : 
 
 ```properties
 mkdir bin
@@ -69,33 +69,21 @@ mkdir bin
 ---
 
 ### Build the application
-From the terminal use the following command to compile the code in the bin folder created previously, and run it
+From the terminal use the following command to compile the code in the bin folder created previously, and run it : : `./build.sh`
 
-```properties
-./build.sh
-```  
 
 ### Launch the application
 
-From the terminal use the following command to launch the already built application
+From the terminal use the following command to launch the already built application : `./run.sh`  
 
-```properties
-./run.sh
-```  
 
 ### Clear the previous build for the application
 
-From the terminal use the following command to clear the build
+From the terminal use the following command to clear the build : `./clear.sh`
 
-```properties
-./clear.sh
-```
+
 ### Pushs changes to your repository
 
-After forking the repository to your local machine and making some local changes, use the following command to add all changes, commit with a message and push to the remote repository 
-
-```properties
-./push.sh
-```
+After forking the repository to your local machine and making some local changes, use the following command to add all changes, commit with a message and push to the remote repository : : `./push.sh`
 
 Uppon using this command you will be prompted to write a commit message. To confirm and move to the next step press enter
