@@ -69,21 +69,29 @@ mkdir bin
 ---
 
 ### Build the application
-From the terminal use the following command to compile the code in the bin folder created previously, and run it : : `./build.sh`
+From the terminal use the following command to compile the code in the bin folder created previously, and run it :
+
+`./build.sh`
 
 
 ### Launch the application
 
-From the terminal use the following command to launch the already built application : `./run.sh`  
+From the terminal use the following command to launch the already built application : 
+
+`./run.sh`  
 
 
 ### Clear the previous build for the application
 
-From the terminal use the following command to clear the build : `./clear.sh`
+From the terminal use the following command to clear the build : 
+
+`./clear.sh`
 
 
 ### Pushs changes to your repository
 
-After forking the repository to your local machine and making some local changes, use the following command to add all changes, commit with a message and push to the remote repository : : `./push.sh`
+After forking the repository to your local machine and making some local changes, use the following command to add all changes, commit with a message and push to the remote repository : : 
+
+`./push.sh`
 
 Uppon using this command you will be prompted to write a commit message. To confirm and move to the next step press enter
