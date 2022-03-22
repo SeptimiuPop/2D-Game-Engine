@@ -19,7 +19,7 @@
         /*Create the game's supported keys list and map them to some key bindings*/
 
         // Open config file for the supported keys
-        std::ifstream config("../config/supported_keys.ini");
+        std::ifstream config("config/supported_keys.ini");
         if(config.is_open()){
             std::string key;
             int value;
@@ -33,7 +33,7 @@
 
         /* Open config file to assign the keybinds*/
 
-        config.open("../config/key_binds.ini");
+        config.open("config/key_binds.ini");
         if(config.is_open()){
             std::string key;
             std::string value;

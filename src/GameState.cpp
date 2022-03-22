@@ -90,19 +90,19 @@
         switch (roomCount)
         {
         case 0:
-            initMap("../config/Rooms/Room_2.ini");
+            initMap("config/Rooms/Room_2.ini");
             break;
         case 1:
-            initMap("../config/Rooms/Room_1.ini");
+            initMap("config/Rooms/Room_1.ini");
             break;
         case 2:
-            initMap("../config/Rooms/Room_3.ini");
+            initMap("config/Rooms/Room_3.ini");
             break;
         case 3:
-            initMap("../config/Rooms/Room_4.ini");
+            initMap("config/Rooms/Room_4.ini");
             break;
         case 4:
-            initMap("../config/Rooms/Room_5.ini");
+            initMap("config/Rooms/Room_5.ini");
             break;
         default:
             break;

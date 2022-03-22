@@ -13,21 +13,21 @@
 
     void ResourceManager::initAssets(){
         // textures
-        loadTexture("monk","../assets/Textures/Ground_Monk.png");
-        loadTexture("player","../assets/Textures/Sprites.png");
-        loadTexture("ui","../assets/Textures/ui_health.png");
-        loadTexture("tileset","../assets/Textures/Tileset.png");
+        loadTexture("monk","./assets/Textures/Ground_Monk.png");
+        loadTexture("player","./assets/Textures/Sprites.png");
+        loadTexture("ui","./assets/Textures/ui_health.png");
+        loadTexture("tileset","./assets/Textures/Tileset.png");
 
         // fonts
-        loadFont("main_menu", "../assets/Fonts/alphbeta.ttf");
+        loadFont("main_menu", "./assets/Fonts/alphbeta.ttf");
 
         // sound
-        loadSound("walk_stone","../assets/Audio/player/boot_stone_01.wav");
-        loadSound("walk_carpet","../assets/Audio/player/boot_carpet_01.wav");
+        loadSound("walk_stone","./assets/Audio/player/boot_stone_01.wav");
+        loadSound("walk_carpet","./assets/Audio/player/boot_carpet_01.wav");
 
         // music 
-        loadMusic("main_menu","../assets/Audio/2019-06-14_-_Warm_Light_-_David_Fesliyan.wav");
-        loadMusic("in_game","../assets/Audio/Timberbrook.wav");
+        loadMusic("main_menu","./assets/Audio/2019-06-14_-_Warm_Light_-_David_Fesliyan.wav");
+        loadMusic("in_game","./assets/Audio/Timberbrook.wav");
     }
 
 
