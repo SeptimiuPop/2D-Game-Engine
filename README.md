@@ -44,7 +44,6 @@ $(CC) *.o -o $(EXE_PATH) $(LIBS) -L <SFML/lib Path>
 
 Where `<SFML/include Path>` and `<SFML/lib Path>` are replaced by the path of the include and lib directories in the cloned SFML folder
 
----
 
 ## Prepare the commands
 
@@ -55,8 +54,6 @@ mkdir bin
 ```
 
 Other names can also be used for the directory but the 'BIN_PATH' in the Makefile should be changed accordingly
-
----
 
 - ### Launch the Application
 
