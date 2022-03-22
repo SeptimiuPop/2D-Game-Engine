@@ -31,11 +31,7 @@ RESET_ANIM  | R
 NEW_ROOM    | T
 
 
-## Setup work
-
-
-
-- ### Install SFML
+## Install SFML
 
 SFML can be installed dirrectly from the website by following the instructions or cloned from the [repository](https://github.com/SeptimiuPop/2D-Game-Engine/tree/main/External/SFML).
 
@@ -50,7 +46,7 @@ Where `<SFML/include Path>` and `<SFML/lib Path>` are replaced by the path of th
 
 ---
 
-- ### Prepare the commands
+## Prepare the commands
 
 In order to successfully build and run the application you must create a folder named bin where the build files will go. To do this use the following command from the terminal :
 
