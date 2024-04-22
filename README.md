@@ -12,24 +12,6 @@ The software requirements to run the application :
 - C++ 11 or above
 - SFML library installed
 
-## Controls
-
-The controlls can be edited from the config/key_binds.ini
-
-Key Binds | Actions 
------------- | ------------- 
-Toggle menu | Escape  
-MOVE_LEFT   | A
-MOVE_RIGHT  | D
-MOVE_UP     | W
-MOVE_DOWN   | S
-DASH        | Space
-SLOW        | LShift
-NEXT_ANIM   | E
-PREV_ANIM   | Q
-RESET_ANIM  | R
-NEW_ROOM    | T
-
 
 ## Install SFML
 
@@ -71,3 +53,22 @@ From the terminal use the following command to compile the code in the bin folde
 From the terminal use the following command to clear the build :
 
 ` make clear `
+
+
+## Controls
+
+The controlls can be edited from the config/key_binds.ini
+
+Key Binds | Actions 
+------------ | ------------- 
+Toggle menu | Escape  
+MOVE_LEFT   | A
+MOVE_RIGHT  | D
+MOVE_UP     | W
+MOVE_DOWN   | S
+DASH        | Space
+SLOW        | LShift
+NEXT_ANIM   | E
+PREV_ANIM   | Q
+RESET_ANIM  | R
+NEW_ROOM    | T
